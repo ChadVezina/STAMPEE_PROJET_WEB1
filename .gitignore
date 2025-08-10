@@ -1,0 +1,75 @@
+# Composer dependencies
+/vendor/
+
+# Node dependencies
+/node_modules/
+
+# Environment files
+.env
+.env.*.local
+
+# Application cache, logs, and sessions
+/storage/
+*.log
+
+# IDE and editor files
+/.idea/
+/.vscode/
+/*.sublime-workspace
+/*.sublime-project
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+Desktop.ini
+
+# PHPUnit
+/phpunit.xml
+/phpunit.xml.dist
+
+# Build and deployment
+/build/
+/dist/
+/public/build/
+/public/dist/
+
+# User uploads (if not versioned)
+public/uploads/
+public/files/
+
+# Composer PHAR
+composer.phar
+
+# Coverage reports
+coverage/
+
+# Misc
+*.bak
+*.tmp
+*.swp
+*.swo
+
+# NPM/Yarn logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# SFTP configuration files
+.sftpConfig.json
+
+# Mac system files
+.AppleDouble
+.LSOverride
+
+# Windows system files
+$RECYCLE.BIN/
+
+# Backup files
+*~
+*.orig
+
+# Cache
+.cache/
+.cache-loader/
