@@ -1,6 +1,10 @@
-<?php use App\Core\CsrfToken; $base = \App\Core\Config::get('app.base_url',''); ?>
+<?php
+
+use App\Core\CsrfToken;
+
+$basePath = \App\Core\Config::get('app.base_path', ''); ?>
 <h1>Connexion</h1>
-<form id="form-login" action="<?= htmlspecialchars($base) ?>/login" method="post" novalidate>
+<form id="form-login" action="<?= htmlspecialchars($basePath) ?>/login" method="post" novalidate>
   <?= CsrfToken::field() ?>
   <div>
     <label for="email">Email</label>
@@ -14,4 +18,4 @@
   </div>
   <button type="submit">Se connecter</button>
 </form>
-<p>Pas encore de compte ? <a href="<?= htmlspecialchars($base) ?>/register">Inscription</a></p>
+<p>Pas encore de compte ? <a href="<?= htmlspecialchars($basePath) ?>/register">Inscription</a></p>

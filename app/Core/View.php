@@ -16,8 +16,8 @@ final class View
     }
     public static function redirect(string $to): void
     {
-        $basePath = '/stampee';
-        if (strpos($to, '/') === 0 && strpos($to, $basePath) !== 0) {
+        $basePath = Config::get('app.base_path', '');
+        if ($basePath && str_starts_with($to, '/') && !str_starts_with($to, $basePath . '/')) {
             $to = $basePath . $to;
         }
         header('Location: ' . $to);
