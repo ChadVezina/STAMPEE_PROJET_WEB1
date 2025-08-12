@@ -3,29 +3,35 @@
 use App\Core\CsrfToken;
 
 $basePath = \App\Core\Config::get('app.base_path', ''); ?>
-<h1>Inscription</h1>
-<form id="form-register" action="<?= htmlspecialchars($basePath) ?>/register" method="post" novalidate>
-  <?= CsrfToken::field() ?>
-  <div>
-    <label for="nom">Nom</label>
-    <input required type="text" id="nom" name="nom" minlength="2" maxlength="100" autocomplete="name">
-    <small class="error" data-for="nom"></small>
+<div class="auth-page">
+  <div class="card card--auth">
+    <h1 class="card__title">Inscription</h1>
+    <form class="form form--auth" action="/Stampee/register" method="post">
+      <?= CsrfToken::field() ?>
+      <div class="field">
+        <label class="field__label" for="fullname">Nom complet</label>
+        <input class="field__input" type="text" id="fullname" name="fullname" required />
+        <p class="field__error">Veuillez entrer votre nom.</p>
+      </div>
+      <div class="field">
+        <label class="field__label" for="email">Adresse e-mail</label>
+        <input class="field__input" type="email" id="email" name="email" required />
+        <p class="field__error">Veuillez entrer une adresse e-mail valide.</p>
+      </div>
+      <div class="field">
+        <label class="field__label" for="password">Mot de passe</label>
+        <input class="field__input" type="password" id="password" name="password" required />
+        <p class="field__error">Veuillez entrer un mot de passe.</p>
+      </div>
+      <div class="field">
+        <label class="field__label" for="confirm">Confirmer le mot de passe</label>
+        <input class="field__input" type="password" id="confirm" name="confirm" required />
+        <p class="field__error">Les mots de passe ne correspondent pas.</p>
+      </div>
+      <button type="submit" class="button button--primary form__submit">S'inscrire</button>
+      <p class="form__note">
+        Déjà membre ? <a href="/Stampee/login">Connexion</a>
+      </p>
+    </form>
   </div>
-  <div>
-    <label for="email">Email</label>
-    <input required type="email" id="email" name="email" autocomplete="email">
-    <small class="error" data-for="email"></small>
-  </div>
-  <div>
-    <label for="password">Mot de passe</label>
-    <input required type="password" id="password" name="password" minlength="8" autocomplete="new-password">
-    <small class="error" data-for="password"></small>
-  </div>
-  <div>
-    <label for="confirm">Confirmation</label>
-    <input required type="password" id="confirm" name="confirm" minlength="8" autocomplete="new-password">
-    <small class="error" data-for="confirm"></small>
-  </div>
-  <button type="submit">Créer mon compte</button>
-</form>
-<p>Déjà inscrit ? <a href="<?= htmlspecialchars($basePath) ?>/login">Connexion</a></p>
+</div>

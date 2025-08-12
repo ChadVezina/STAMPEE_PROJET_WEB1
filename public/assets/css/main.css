@@ -1,0 +1,430 @@
+@charset "UTF-8";
+/* Variables de couleur */
+/* Bleu royal profond (couleur principale) */
+/* Bordeaux raffiné (alternative principale) */
+/* Or discret (pour accents/feedbacks) */
+/* Blanc cassé (fonds, cartes) */
+/* Gris foncé (texte) */
+/* Rouge erreur (pour messages d’erreur) */
+/*Variables de Polices*/
+/* Police titres élégante */
+/* Police textes courants */
+/*BreakPoints*/
+/* Reset CSS de base */
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* Styles globaux et typographiques de base */
+html {
+  font-size: 100%; /* 16px par défaut (sera modulé si besoin via clamp) */
+}
+
+body {
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  color: #333333;
+  background-color: #FFFFFF; /* Fond global blanc (contrastant avec cartes) */
+}
+
+h1, h2, h3 {
+  font-family: "Playfair Display", serif;
+  color: #1B355A;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: clamp(1.75rem, 5vw, 2.25rem);
+} /* Titres adaptatifs (28px à 36px) */
+/* Composant Bouton (primaire, secondaire) */
+.button {
+  display: inline-block;
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  text-align: center;
+  /* Couleurs par défaut (secondaire) */
+  background-color: #6B1E2E;
+  color: #FFFFFF;
+}
+.button--primary {
+  background-color: #1B355A; /* Bouton primaire bleu royal */
+  color: #FFFFFF;
+}
+.button--secondary {
+  background-color: #6B1E2E; /* Bouton secondaire bordeaux */
+  color: #FFFFFF;
+}
+.button:hover {
+  opacity: 0.9;
+}
+
+/* Composant Champ de formulaire */
+.field {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin-bottom: 1rem;
+  /* État d'erreur */
+  /* État de succès */
+}
+.field__label {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  -webkit-transition: color 0.2s ease;
+  transition: color 0.2s ease;
+}
+.field__input {
+  font: 1rem "Roboto", sans-serif;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #cccccc;
+  border-radius: 0.25rem;
+  -webkit-transition: border-color 0.2s ease, -webkit-box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, -webkit-box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, -webkit-box-shadow 0.2s ease;
+}
+.field__input:focus {
+  border-color: #BFA56A; /* Met en évidence le champ avec la couleur d'accent */
+  outline: none;
+  -webkit-box-shadow: 0 0 0 2px rgba(191, 165, 106, 0.2);
+          box-shadow: 0 0 0 2px rgba(191, 165, 106, 0.2);
+}
+.field__error {
+  font-size: 0.875rem;
+  color: #CC0000;
+  margin-top: 0.25rem;
+  display: none; /* masqué par défaut, affiché en cas d'erreur */
+  opacity: 0;
+  -webkit-transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease;
+}
+.field--error .field__label {
+  color: #CC0000;
+}
+.field--error .field__input {
+  border-color: #CC0000;
+  -webkit-box-shadow: 0 0 0 2px rgba(204, 0, 0, 0.1);
+          box-shadow: 0 0 0 2px rgba(204, 0, 0, 0.1);
+}
+.field--error .field__input:focus {
+  border-color: #CC0000;
+  -webkit-box-shadow: 0 0 0 2px rgba(204, 0, 0, 0.2);
+          box-shadow: 0 0 0 2px rgba(204, 0, 0, 0.2);
+}
+.field--error .field__error {
+  display: block;
+  opacity: 1;
+}
+.field--success .field__input {
+  border-color: #28a745;
+  -webkit-box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.1);
+          box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.1);
+}
+
+/* Composant Formulaire d'authentification */
+.form__submit {
+  /* Bouton de soumission du formulaire, on peut étendre le style du .button */
+  width: 100%;
+  margin: 1rem 0;
+}
+.form__note {
+  text-align: center;
+  font-size: 0.9rem;
+}
+.form__note a {
+  color: #1B355A;
+  text-decoration: none;
+}
+
+/* Composant Messages (erreur, succès, etc.) */
+.alert {
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  position: relative;
+  -webkit-animation: slideIn 0.3s ease-out;
+          animation: slideIn 0.3s ease-out;
+}
+
+.alert-error {
+  background-color: #ffeaea;
+  color: #CC0000;
+  border-color: #ffcccc;
+}
+
+.alert-success {
+  background-color: #eafff0;
+  color: #006600;
+  border-color: #ccffcc;
+}
+
+.alert .close-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.7;
+}
+.alert .close-btn:hover {
+  opacity: 1;
+}
+
+/* Legacy classes for backward compatibility */
+.message--error {
+  color: #CC0000;
+  font-weight: 500;
+}
+
+.message--success {
+  color: #BFA56A;
+  font-weight: 500;
+}
+
+/* Animation for message appearance */
+@-webkit-keyframes slideIn {
+  from {
+    opacity: 0;
+    -webkit-transform: translateY(-10px);
+            transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+}
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    -webkit-transform: translateY(-10px);
+            transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+}
+/* Animation for message dismissal */
+@-webkit-keyframes slideOut {
+  from {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    -webkit-transform: translateY(-10px);
+            transform: translateY(-10px);
+  }
+}
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    -webkit-transform: translateY(-10px);
+            transform: translateY(-10px);
+  }
+}
+.alert.fade-out {
+  -webkit-animation: slideOut 0.3s ease-out forwards;
+          animation: slideOut 0.3s ease-out forwards;
+}
+
+/* Composant Carte centrée */
+.card {
+  background-color: #F7F5F2;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  margin: 2rem auto; /* centre horizontalement sur mobile */
+}
+.card--auth {
+  /* Spécificités pour la carte d'authentification (inscription/connexion) */
+  -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.card__title {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+@media (min-width: 768px) {
+  .card {
+    max-width: 500px;
+    padding: 3rem;
+    margin: 3rem auto;
+  }
+  .card__title {
+    font-size: 1.75rem;
+  }
+}
+
+/* Styles spécifiques aux pages d'inscription/connexion */
+.auth-page {
+  min-height: 100vh;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  padding: 1rem;
+  background-color: #f0f0f0; /* léger fond gris pour contraster la carte */
+}/*# sourceMappingURL=main.css.map */

@@ -1,0 +1,19 @@
+@use "variables" as vars;
+
+/* Styles globaux et typographiques de base */
+html {
+  font-size: 100%; /* 16px par défaut (sera modulé si besoin via clamp) */
+}
+body {
+  margin: 0;
+  font-family: vars.$font-body;
+  color: vars.$color-neutral-dark;
+  background-color: #FFFFFF; /* Fond global blanc (contrastant avec cartes) */
+}
+h1, h2, h3 {
+  font-family: vars.$font-title;
+  color: vars.$color-primary;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+h1 { font-size: clamp(1.75rem, 5vw, 2.25rem); }  /* Titres adaptatifs (28px à 36px) */

@@ -9,7 +9,7 @@ $baseUrl = \App\Core\Config::get('app.base_url', '');
   <meta charset="utf-8">
   <title>Stampee</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="<?= htmlspecialchars($baseUrl) ?>/assets/css/app.css" rel="stylesheet">
+  <link href="<?= htmlspecialchars($baseUrl) ?>/assets/css/main.css" rel="stylesheet">
 </head>
 
 <body>

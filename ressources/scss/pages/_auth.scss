@@ -1,0 +1,9 @@
+/* Styles spécifiques aux pages d'inscription/connexion */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background-color: #f0f0f0; /* léger fond gris pour contraster la carte */
+}

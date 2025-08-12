@@ -1,0 +1,33 @@
+@use "../base/variables" as vars;
+
+/* Composant Carte centrée */
+.card {
+  background-color: vars.$color-neutral-light;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  margin: 2rem auto;  /* centre horizontalement sur mobile */
+
+  &--auth {
+    /* Spécificités pour la carte d'authentification (inscription/connexion) */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (min-width: vars.$bp-md) {
+    max-width: 500px;
+    padding: 3rem;
+    margin: 3rem auto;
+
+    &__title {
+      font-size: 1.75rem;
+    }
+  }
+}

@@ -1,0 +1,67 @@
+@use "../base/variables" as vars;
+
+/* Composant Champ de formulaire */
+.field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+
+    &__label {
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+        transition: color 0.2s ease;
+    }
+
+    &__input {
+        font: 1rem vars.$font-body;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #cccccc;
+        border-radius: 0.25rem;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+        &:focus {
+            border-color: vars.$color-accent; /* Met en évidence le champ avec la couleur d'accent */
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(191, 165, 106, 0.2);
+        }
+    }
+
+    &__error {
+        font-size: 0.875rem;
+        color: vars.$color-error;
+        margin-top: 0.25rem;
+        display: none; /* masqué par défaut, affiché en cas d'erreur */
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+
+    /* État d'erreur */
+    &--error {
+        .field__label {
+            color: vars.$color-error;
+        }
+
+        .field__input {
+            border-color: vars.$color-error;
+            box-shadow: 0 0 0 2px rgba(204, 0, 0, 0.1);
+
+            &:focus {
+                border-color: vars.$color-error;
+                box-shadow: 0 0 0 2px rgba(204, 0, 0, 0.2);
+            }
+        }
+
+        .field__error {
+            display: block;
+            opacity: 1;
+        }
+    }
+
+    /* État de succès */
+    &--success {
+        .field__input {
+            border-color: #28a745;
+            box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.1);
+        }
+    }
+}
