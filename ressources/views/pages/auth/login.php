@@ -6,7 +6,7 @@ $basePath = \App\Core\Config::get('app.base_path', ''); ?>
 <div class="auth-page">
   <div class="card card--auth">
     <h1 class="card__title">Connexion</h1>
-    <form class="form form--auth" action="/Stampee/login" method="post">
+    <form id="form-login" class="form form--auth" action="<?= htmlspecialchars($basePath) ?>/login" method="post">
       <?= CsrfToken::field() ?>
       <div class="field">
         <label class="field__label" for="email">Adresse e-mail</label>
@@ -20,7 +20,7 @@ $basePath = \App\Core\Config::get('app.base_path', ''); ?>
       </div>
       <button type="submit" class="button button--primary form__submit">Se connecter</button>
       <p class="form__note">
-        Pas encore de compte ? <a href="/Stampee/register">Inscription</a>
+        Pas encore de compte ? <a href="<?= htmlspecialchars($basePath) ?>/register">Inscription</a>
       </p>
     </form>
   </div>

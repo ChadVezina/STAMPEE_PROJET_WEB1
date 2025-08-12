@@ -6,11 +6,11 @@ $basePath = \App\Core\Config::get('app.base_path', ''); ?>
 <div class="auth-page">
   <div class="card card--auth">
     <h1 class="card__title">Inscription</h1>
-    <form class="form form--auth" action="/Stampee/register" method="post">
+    <form id="form-register" class="form form--auth" action="<?= htmlspecialchars($basePath) ?>/register" method="post">
       <?= CsrfToken::field() ?>
       <div class="field">
-        <label class="field__label" for="fullname">Nom complet</label>
-        <input class="field__input" type="text" id="fullname" name="fullname" required />
+        <label class="field__label" for="nom">Nom complet</label>
+        <input class="field__input" type="text" id="nom" name="nom" required />
         <p class="field__error">Veuillez entrer votre nom.</p>
       </div>
       <div class="field">
@@ -30,7 +30,7 @@ $basePath = \App\Core\Config::get('app.base_path', ''); ?>
       </div>
       <button type="submit" class="button button--primary form__submit">S'inscrire</button>
       <p class="form__note">
-        Déjà membre ? <a href="/Stampee/login">Connexion</a>
+        Déjà membre ? <a href="<?= htmlspecialchars($basePath) ?>/login">Connexion</a>
       </p>
     </form>
   </div>
