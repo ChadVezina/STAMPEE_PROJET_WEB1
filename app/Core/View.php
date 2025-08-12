@@ -6,6 +6,14 @@ final class View
 {
     public static function render(string $view, array $data = []): void
     {
+        // Ensure required constants are defined
+        if (!defined('BASE_PATH')) {
+            define('BASE_PATH', dirname(__DIR__, 2));
+        }
+        if (!defined('VIEW_PATH')) {
+            define('VIEW_PATH', BASE_PATH . '/ressources/views');
+        }
+
         extract($data, EXTR_SKIP);
         $flash = $_SESSION['flash'] ?? [];
         unset($_SESSION['flash']);
