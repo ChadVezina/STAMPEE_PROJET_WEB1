@@ -9,7 +9,6 @@ use App\Core\CsrfToken;
 use App\Services\AuctionService;
 use App\Services\BidService;
 use App\Services\StampService;
-use App\Services\FavoriteService;
 
 final class AuctionController
 {

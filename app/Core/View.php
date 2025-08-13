@@ -25,10 +25,10 @@ final class View
     public static function redirect(string $to): void
     {
         $basePath = Config::get('app.base_path', '');
-        if ($basePath && str_starts_with($to, '/') && !str_starts_with($to, $basePath . '/')) {
+        if ($basePath && str_starts_with($to, '/') && !str_starts_with($to, "$basePath/")) {
             $to = $basePath . $to;
         }
-        header('Location: ' . $to);
+        header("Location: $to");
         exit;
     }
 }

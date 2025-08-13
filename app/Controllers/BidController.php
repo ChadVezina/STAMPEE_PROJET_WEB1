@@ -19,7 +19,7 @@ final class BidController
         if (!CsrfToken::check($data['_token'] ?? null)) {
             $_SESSION['flash']['error'] = 'CSRF invalide.';
             $aid = (int)($data['auction_id'] ?? 0);
-            View::redirect($aid > 0 ? '/auction/show?id=' . $aid : '/auctions');
+            View::redirect($aid > 0 ? "/auction/show?id=$aid" : '/auctions');
         }
 
         $auctionId = (int)($data['auction_id'] ?? 0);
@@ -31,7 +31,7 @@ final class BidController
 
         $ok = (new BidService())->placeBid($auctionId, (int)$_SESSION['user']['id'], $price);
         $_SESSION['flash'][$ok ? 'success' : 'error'] = $ok ? 'Offre placée.' : 'Offre refusée (règles).';
-        View::redirect('/auction/show?id=' . $auctionId);
+        View::redirect("/auction/show?id=$auctionId");
     }
 
     public function delete(array $data): void
@@ -50,6 +50,6 @@ final class BidController
 
         $ok = (new BidService())->delete($bidId, (int)$_SESSION['user']['id']);
         $_SESSION['flash'][$ok ? 'success' : 'error'] = $ok ? 'Offre supprimée.' : 'Suppression refusée.';
-        View::redirect('/auction/show?id=' . $auctionId);
+        View::redirect("/auction/show?id=$auctionId");
     }
 }

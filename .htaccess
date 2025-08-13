@@ -4,14 +4,18 @@ Options -Indexes
 # 1) Let requests already targeting /public pass through unchanged
 RewriteRule ^public/ - [L]
 
-# 2) Serve existing files as-is. For directories, serve as-is only if it's not the project root
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_URI} !^/?$
-RewriteCond %{REQUEST_FILENAME} -d
+# 2) Serve existing files as-is
+RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule ^ - [L]
 
-# 3) Map common static paths to /public (so /Stampee/assets/... works)
+# 3) Serve existing directories as-is (except root)
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_URI} !^/?$
+RewriteRule ^ - [L]
+
+# 4) Map common static paths to /public (so /Stampee/assets/... works)
 RewriteRule ^(assets|uploads|favicon\.ico|robots\.txt)(/.*)?$ public/$0 [L]
 
-# 4) Front controller: everything else goes to /public/index.php
-RewriteRule ^(.*)$ public/index.php [QSA,L]
+# 5) Front controller: everything else goes to /public/index.php
+# Important: Pass the original request path as an environment variable
+RewriteRule ^(.*)$ public/index.php [E=ORIGINAL_PATH:$1,QSA,L]

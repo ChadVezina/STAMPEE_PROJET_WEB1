@@ -114,7 +114,6 @@ final class StampService
         ]);
 
         if ($stmt->rowCount() > 0) return true;
-        // inchangé mais existant ?
         $chk = DB::pdo()->prepare("SELECT 1 FROM `Stamp` WHERE id = ? LIMIT 1");
         $chk->execute([$id]);
         return (bool)$chk->fetchColumn();

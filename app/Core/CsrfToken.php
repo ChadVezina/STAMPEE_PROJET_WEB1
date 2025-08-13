@@ -14,7 +14,6 @@ final class CsrfToken
     }
     public static function token(): string
     {
-        // Ensure token is initialized if not already
         if (empty($_SESSION[self::KEY])) {
             self::boot();
         }

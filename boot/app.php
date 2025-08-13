@@ -33,13 +33,13 @@ ini_set('session.use_strict_mode','1');
 session_start();
 
 // DB (définis $appEnv et valeurs locales standard)
-$appEnv = $_ENV['APP_ENV'] ?? 'local'; // FIX
+$appEnv = $_ENV['APP_ENV'] ?? 'local';
 DB::init([
-  'host'    => $_ENV['DB_HOST'] ?? '127.0.0.1',
-  'port'    => $_ENV['DB_PORT'] ?? '3306',
-  'dbname'  => $_ENV['DB_NAME'] ?? 'Stampee',
-  'user'    => $_ENV['DB_USER'] ?? 'root',
-  'pass'    => $_ENV['DB_PASS'] ?? '',
-  'charset' => $_ENV['DB_CHARSET'] ?? 'utf8mb4',
+  'host'    => $_ENV['DB_HOST'],
+  'port'    => $_ENV['DB_PORT'],
+  'dbname'  => $_ENV['DB_NAME'],
+  'user'    => $_ENV['DB_USER'],
+  'pass'    => $_ENV['DB_PASS'],
+  'charset' => $_ENV['DB_CHARSET']
 ]);
 CsrfToken::boot();

@@ -42,5 +42,3 @@ Route::post('/stamp/delete', [StampController::class, 'delete']);
 // Gestion des offres
 Route::post('/bid/store', [BidController::class, 'store']);
 Route::post('/bid/delete', [BidController::class, 'delete']);
-
-Route::dispatch();

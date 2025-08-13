@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Routes;
 
 use App\Core\Config;
+use ReflectionMethod;
 
 class Route
 {
@@ -37,56 +38,82 @@ class Route
         $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
         $requestUri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 
-        // Calcul du chemin de base (sans "/public")
-        $scriptDir   = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
-        $configuredBase = (string) Config::get('app.base_path', '');
-        $basePath    = $configuredBase !== '' ? $configuredBase : rtrim(preg_replace('#/public$#', '', $scriptDir), '/');
+        // Always use the configured base path from app.php
+        $basePath = (string) Config::get('app.base_path', '');
 
         // Normalisation du chemin de requête
         $path = $requestUri;
-        if ($basePath !== '' && str_starts_with($path, $basePath)) {
+
+        // Debug logging
+        error_log("Route::dispatch() - Original REQUEST_URI: $requestUri");
+        error_log("Route::dispatch() - Base path: '$basePath'");
+
+        // Remove base path if present (case-insensitive)
+        error_log("Route::dispatch() - str_starts_with('$path', '$basePath'): " . (str_starts_with(strtolower($path), strtolower($basePath)) ? 'TRUE' : 'FALSE'));
+        error_log("Route::dispatch() - basePath !== '': " . ($basePath !== '' ? 'TRUE' : 'FALSE'));
+        if ($basePath !== '' && str_starts_with(strtolower($path), strtolower($basePath))) {
             $path = substr($path, strlen($basePath)) ?: '/';
+            error_log("Route::dispatch() - After base removal: '$path'");
+        } else {
+            error_log("Route::dispatch() - Base path NOT removed");
         }
+
+        // Remove /public if present
         $path = preg_replace('#^/public(?=/|$)#', '', $path) ?: '/';
-        $path = '/' . ltrim(rtrim($path, '/'), '/');
+        error_log("Route::dispatch() - After /public removal: '$path'");
+
+        // Ensure path starts with / and has no trailing slash (except for root)
+        if ($path !== '/') {
+            $path = '/' . trim($path, '/');
+        }
+        error_log("Route::dispatch() - Final normalized path: '$path'");
 
         foreach (self::$routes as $route) {
             if ($route['method'] !== $method) {
                 continue;
             }
-            $routePath = '/' . ltrim(rtrim($route['url'], '/'), '/');
-            if ($routePath !== $path) {
-                continue;
+
+            // Normalize route path too
+            $routePath = $route['url'];
+            if ($routePath !== '/') {
+                $routePath = '/' . trim($routePath, '/');
             }
 
-            $controller = $route['controller'];
-            if (is_array($controller) && isset($controller[0], $controller[1])) {
-                // Contrôleur au format [ClassName::class, 'method']
-                $instance = is_string($controller[0]) ? new $controller[0]() : $controller[0];
-                $action   = $controller[1];
-                $args     = self::buildArgs($instance, $action, $method);
-                $instance->$action(...$args);
-                return;
-            }
-            if (is_callable($controller)) {
-                // Contrôleur sous forme de closure ou fonction
-                $controller();
-                return;
+            if ($routePath === $path) {
+                error_log("Route::dispatch() - MATCH FOUND! Route: '$routePath' matches path: '$path'");
+                $controller = $route['controller'];
+                if (is_array($controller) && isset($controller[0], $controller[1])) {
+                    // Contrôleur au format [ClassName::class, 'method']
+                    $instance = is_string($controller[0]) ? new $controller[0]() : $controller[0];
+                    $action   = $controller[1];
+                    error_log("Route::dispatch() - Calling {$controller[0]}::{$action}");
+                    $args     = self::buildArgs($instance, $action, $method);
+                    $instance->$action(...$args);
+                    return;
+                }
+                if (is_callable($controller)) {
+                    // Contrôleur sous forme de closure ou fonction
+                    $controller();
+                    return;
+                }
             }
         }
 
         // Aucune route trouvée => 404
+        error_log("Route::dispatch() - NO ROUTE FOUND for path: '$path' method: '$method'");
+        error_log("Route::dispatch() - Available routes: " . print_r(array_map(function ($r) {
+            return $r['method'] . ' ' . $r['url'];
+        }, self::$routes), true));
         http_response_code(404);
         echo '404 - Page non trouvée';
     }
-
     /**
      * Prépare les arguments à injecter dans la méthode du contrôleur en fonction de sa signature.
      */
     private static function buildArgs(object $instance, string $method, string $httpMethod): array
     {
         try {
-            $refMethod = new \ReflectionMethod($instance, $method);
+            $refMethod = new ReflectionMethod($instance, $method);
             $required = $refMethod->getNumberOfRequiredParameters();
             $total    = $refMethod->getNumberOfParameters();
         } catch (\ReflectionException $e) {
