@@ -1,0 +1,171 @@
+@use "../base/variables" as vars;
+
+/* Footer principal */
+.main-footer {
+    background-color: vars.$color-primary;
+    color: white;
+    margin-top: auto;
+}
+
+/* Ligne de séparation du haut */
+.footer-separator {
+    height: 2px;
+    background-color: vars.$color-secondary;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+/* Contenu principal du footer */
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr ;
+    gap: 2rem;
+    align-items: start;
+}
+
+/* Sections du footer */
+.footer-section {
+    .footer-brand {
+        font-family: vars.$font-title;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: vars.$color-accent;
+        margin: 0 0 1rem 0;
+    }
+
+    .footer-description {
+        font-family: vars.$font-body;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0;
+    }
+
+    .footer-title {
+        font-family: vars.$font-title;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: vars.$color-accent;
+        margin: 0 0 1rem 0;
+    }
+}
+
+/* Listes de liens */
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+        margin-bottom: 0.5rem;
+    }
+
+    .footer-link {
+        font-family: vars.$font-body;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: color 0.3s ease;
+
+        &:hover {
+            color: vars.$color-accent;
+        }
+    }
+}
+
+/* Réseaux sociaux */
+.footer-social {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+
+    .social-link {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        text-decoration: none;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: vars.$color-accent;
+            transform: translateY(-2px);
+        }
+    }
+}
+
+/* Bas du footer */
+.footer-bottom {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 1rem 2rem;
+    text-align: center;
+
+    .footer-copyright {
+        font-family: vars.$font-body;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin: 0;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+}
+
+/* Responsive design */
+@media (max-width: vars.$bp-lg) {
+    .footer-content {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: vars.$bp-md) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+        gap: 2rem;
+        text-align: center;
+    }
+
+    .footer-social {
+        justify-content: center;
+    }
+
+    .footer-bottom {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: vars.$bp-sm) {
+    .footer-content {
+        padding: 1rem;
+    }
+
+    .footer-section .footer-brand {
+        font-size: 1.3rem;
+    }
+
+    .footer-social .social-link {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+}
+
+/* Ajustement pour que le footer reste en bas */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    flex: 1;
+}

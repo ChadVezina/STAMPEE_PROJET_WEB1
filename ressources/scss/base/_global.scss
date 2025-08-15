@@ -2,18 +2,24 @@
 
 /* Styles globaux et typographiques de base */
 html {
-  font-size: 100%; /* 16px par défaut (sera modulé si besoin via clamp) */
+    font-size: 100%;
 }
 body {
-  margin: 0;
-  font-family: vars.$font-body;
-  color: vars.$color-neutral-dark;
-  background-color: #FFFFFF; /* Fond global blanc (contrastant avec cartes) */
+    margin: 0;
+    background: vars.$color-bg;
+    color: vars.$color-text;
+    font-family: vars.$font-body;
 }
-h1, h2, h3 {
-  font-family: vars.$font-title;
-  color: vars.$color-primary;
-  line-height: 1.2;
-  margin-bottom: 1rem;
+h1,
+h2,
+h3 {
+    font-family: vars.$font-title;
+    color: vars.$color-primary;
+    line-height: 1.2;
 }
-h1 { font-size: clamp(1.75rem, 5vw, 2.25rem); }  /* Titres adaptatifs (28px à 36px) */
+h1 {
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+}
+h2 {
+    font-size: clamp(1.3rem, 3vw, 1.8rem);
+}

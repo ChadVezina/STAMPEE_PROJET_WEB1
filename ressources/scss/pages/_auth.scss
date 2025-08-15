@@ -1,9 +1,144 @@
-/* Styles spécifiques aux pages d'inscription/connexion */
+@use "../base/variables" as vars;
+
 .auth-page {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  background-color: #f0f0f0; /* léger fond gris pour contraster la carte */
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background-color: vars.$color-bg; /* Neutral background */
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 520px;
+}
+
+.card--auth {
+    background: #fff;
+    border: 1px solid #e2e6ea;
+    border-radius: 12px;
+    padding: 2rem 2.25rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.card--auth .card__header {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+.card--auth .card__title {
+    margin: 0 0 0.25rem 0;
+    font-family: vars.$font-title;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: vars.$color-primary;
+}
+.card--auth .card__subtitle {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #66707a;
+}
+
+.field {
+    margin-bottom: 1.25rem;
+}
+.field__label {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+.field__input {
+    border-radius: 6px;
+}
+
+/* Password group */
+.field__input-group {
+    position: relative;
+}
+.field__input-group .field__input {
+    width: 100%;
+    padding-right: 2.5rem;
+}
+.field__toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    line-height: 1;
+    color: vars.$color-secondary;
+    opacity: 0.6;
+    transition: opacity 0.15s ease;
+    font-size: 1rem;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+.field__toggle-password:hover {
+    opacity: 1;
+}
+.field__toggle-password:focus-visible {
+    outline: 2px solid vars.$color-accent;
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* Form actions */
+.form__actions {
+    margin-top: 1.25rem;
+}
+.form__actions .form__submit {
+    width: 100%;
+}
+
+/* Links / footer */
+.form__footer {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+.form__note {
+    margin: 0 0 0.75rem 0;
+    font-size: 0.85rem;
+    color: #555;
+}
+.form__note a {
+    color: vars.$color-secondary;
+    text-decoration: none;
+}
+.form__note a:hover {
+    text-decoration: underline;
+}
+.form__forgot {
+    font-size: 0.75rem;
+    color: #777;
+    text-decoration: none;
+}
+.form__forgot:hover {
+    color: vars.$color-primary;
+}
+
+/* Error message (field component sets base) */
+.field__error {
+    font-size: 0.75rem;
+}
+
+/* Responsive */
+@media (max-width: vars.$bp-md) {
+    .auth-container {
+        max-width: 420px; /* Smaller on tablets */
+    }
+}
+
+@media (max-width: vars.$bp-sm) {
+    .card--auth {
+        padding: 1.75rem 1.5rem;
+    }
+
+    .auth-container {
+        max-width: 100%; /* Full width on mobile */
+    }
 }

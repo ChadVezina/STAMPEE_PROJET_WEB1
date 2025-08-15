@@ -1,0 +1,145 @@
+@use "../base/variables" as vars;
+
+/* Header principal */
+.main-header {
+    background-color: vars.$color-primary;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Section du haut avec logo et profil */
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Marque/Logo */
+.header-brand {
+    .brand-title {
+        margin: 0;
+        font-family: vars.$font-title;
+        font-size: clamp(1.8rem, 4vw, 2.5rem);
+        font-weight: 700;
+
+        a {
+            color: vars.$color-accent;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+
+            &:hover {
+                opacity: 0.8;
+            }
+        }
+    }
+}
+
+/* Section profil utilisateur */
+.header-profile {
+    .profile-placeholder {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: vars.$color-accent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid vars.$color-accent;
+
+        .profile-image {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    }
+}
+
+/* Ligne de séparation */
+.header-separator {
+    height: 2px;
+    background-color: vars.$color-secondary;
+    margin: 0 2rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Navigation */
+.header-nav {
+    padding: 0.75rem 2rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+
+    .nav-link {
+        font-family: vars.$font-body;
+        font-size: 0.95rem;
+        color: white;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+        font-weight: 400;
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: vars.$color-accent;
+        }
+
+        &:active,
+        &.active {
+            background-color: vars.$color-accent;
+            color: vars.$color-primary;
+            font-weight: 500;
+        }
+    }
+}
+
+/* Responsive design */
+@media (max-width: vars.$bp-md) {
+    .header-top {
+        padding: 0.75rem 1rem;
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .header-separator {
+        margin: 0 1rem;
+    }
+
+    .header-nav {
+        padding: 0.5rem 1rem 0.75rem;
+        justify-content: center;
+        gap: 1rem;
+
+        .nav-link {
+            font-size: 0.9rem;
+            padding: 0.4rem 0.8rem;
+        }
+    }
+}
+
+@media (max-width: vars.$bp-sm) {
+    .header-brand .brand-title {
+        font-size: 1.5rem;
+    }
+
+    .header-nav {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+
+        .nav-link {
+            width: 100%;
+            max-width: 200px;
+            text-align: center;
+        }
+    }
+}

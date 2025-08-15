@@ -1,0 +1,349 @@
+@use "../base/variables" as vars;
+
+// HERO SECTION (2 columns, full width)
+.hero {
+    background: vars.$color-secondary;
+    color: white;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+
+    &__container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        align-items: center;
+
+        @media (min-width: vars.$bp-md) {
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+    }
+
+    &__image {
+        order: 2;
+        @media (min-width: vars.$bp-md) {
+            order: 1;
+        }
+    }
+
+    &__content {
+        order: 1;
+        text-align: center;
+        @media (min-width: vars.$bp-md) {
+            order: 2;
+            text-align: left;
+        }
+    }
+
+    &__lord-image {
+        width: 100%;
+        padding-top: 75%;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 1rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+
+        &::after {
+            content: "🎩";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            opacity: 0.7;
+        }
+    }
+
+    &__title {
+        font-family: vars.$font-title;
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: vars.$color-accent;
+        margin: 0 0 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+
+        @media (min-width: vars.$bp-md) {
+            font-size: 4.5rem;
+        }
+    }
+
+    &__slogan {
+        font-size: 1.3rem;
+        margin: 0 0 1rem;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+
+    &__mission {
+        font-size: 1rem;
+        margin: 0 0 2rem;
+        opacity: 0.8;
+        font-style: italic;
+    }
+
+    &__cta {
+        display: inline-block;
+        margin-top: 1rem;
+    }
+}
+
+// SECTION CONTAINERS
+.section__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+}
+
+.section__title {
+    font-family: vars.$font-title;
+    font-size: 2.5rem;
+    text-align: center;
+    margin: 0 0 1rem;
+    color: vars.$color-primary;
+}
+
+.section__subtitle {
+    text-align: center;
+    font-size: 1.1rem;
+    color: vars.$color-muted;
+    margin: 0 0 3rem;
+}
+
+.section__actions {
+    text-align: center;
+    margin-top: 3rem;
+}
+
+// COUP DE COEUR SECTION
+.coup-de-coeur {
+    background: vars.$color-card;
+
+    .carousel {
+        position: relative;
+        overflow: hidden;
+
+        &__track {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+
+            @media (max-width: vars.$bp-md) {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        &__ctrl {
+            display: none; // Hide on small screens, show as grid on larger
+        }
+    }
+
+    .card--featured {
+        background: white;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        &:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card__image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .card__badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: vars.$color-accent;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .card__content {
+            padding: 1.5rem;
+        }
+
+        .card__title {
+            font-family: vars.$font-title;
+            font-size: 1.3rem;
+            margin: 0 0 0.5rem;
+            color: vars.$color-primary;
+        }
+
+        .card__price {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: vars.$color-accent;
+            margin: 0;
+        }
+    }
+}
+
+// CURRENT OFFERS SECTION
+.current-offers {
+    background: white;
+
+    .offers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        max-width: none;
+
+        @media (min-width: vars.$bp-md) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    .card--auction {
+        background: vars.$color-card;
+        border-radius: 0.8rem;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+
+        &:hover {
+            transform: translateY(-3px);
+        }
+
+        .card__image {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .card__content {
+            padding: 1.2rem;
+        }
+
+        .card__title {
+            font-size: 1.1rem;
+            margin: 0 0 0.5rem;
+            color: vars.$color-text;
+        }
+
+        .card__price {
+            font-weight: 600;
+            color: vars.$color-secondary;
+            margin: 0 0 0.5rem;
+        }
+
+        .card__time {
+            font-size: 0.9rem;
+            color: vars.$color-muted;
+            margin: 0;
+        }
+    }
+}
+
+// LORD PRESENTATION SECTION
+.lord-presentation {
+    background: vars.$color-secondary;
+    color: white;
+
+    .section__title {
+        color: white;
+    }
+
+    .presentation__content {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .presentation__text {
+        font-size: 1.1rem;
+        line-height: 1.8;
+
+        p {
+            margin: 0 0 1.5rem;
+            opacity: 0.9;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+// RECENT ACQUISITIONS SECTION
+.recent-acquisitions {
+    background: vars.$color-card;
+
+    .recent-card {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
+        &__content {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 2rem;
+            align-items: center;
+
+            @media (max-width: vars.$bp-sm) {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        &__image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+
+            @media (max-width: vars.$bp-sm) {
+                height: 150px;
+            }
+        }
+
+        &__info {
+            padding: 2rem;
+
+            @media (max-width: vars.$bp-sm) {
+                padding: 1rem;
+            }
+        }
+
+        &__title {
+            font-family: vars.$font-title;
+            font-size: 1.4rem;
+            margin: 0 0 0.5rem;
+            color: vars.$color-primary;
+        }
+
+        &__description {
+            color: vars.$color-muted;
+            margin: 0 0 1rem;
+        }
+
+        &__price {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: vars.$color-accent;
+            margin: 0 0 0.5rem;
+        }
+
+        &__time {
+            font-size: 0.9rem;
+            color: vars.$color-muted;
+            font-style: italic;
+        }
+    }
+}
+

@@ -13,7 +13,7 @@
 
 .alert-error {
     background-color: #ffeaea;
-    color: vars.$color-error;
+    color: vars.$color-secondary;
     border-color: #ffcccc;
 }
 
@@ -41,7 +41,7 @@
 
 /* Legacy classes for backward compatibility */
 .message--error {
-    color: vars.$color-error;
+    color: vars.$color-secondary;
     font-weight: 500;
 }
 

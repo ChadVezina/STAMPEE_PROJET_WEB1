@@ -1,0 +1,66 @@
+@use "../base/variables" as vars;
+
+.auctions {
+    &__header {
+        padding: 1rem;
+        background: #fff;
+    }
+    &__title {
+        margin: 0.25rem 0 1rem;
+    }
+    &__tools {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    &__search {
+        display: flex;
+        gap: 0.5rem;
+        flex: 1;
+    }
+    &__input {
+        flex: 1;
+        padding: 0.6rem 0.8rem;
+        border: 1px solid #ccc;
+        border-radius: 0.375rem;
+    }
+    &__filters {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .pagination {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        justify-content: center;
+        &__list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 0.5rem;
+        }
+        &__link {
+            display: inline-block;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            text-decoration: none;
+            border: 1px solid vars.$color-primary;
+            color: vars.$color-primary;
+        }
+        &__link--active {
+            background: vars.$color-primary;
+            color: #fff;
+        }
+    }
+
+    &__footer {
+        padding: 1rem;
+        background: vars.$color-secondary;
+        color: #fff;
+        text-align: center;
+    }
+}

@@ -1,0 +1,44 @@
+@use "../base/variables" as vars;
+
+.grid {
+    display: grid;
+    gap: 1rem;
+    &--cards {
+        grid-template-columns: 1fr 1fr;
+    }
+    @media (min-width: vars.$bp-sm) {
+        &--cards {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+    @media (min-width: vars.$bp-md) {
+        &--cards {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+
+    &--with-aside {
+        grid-template-columns: 1fr;
+    }
+    .grid__main {
+        order: 1;
+    }
+    .grid__aside {
+        order: 2;
+    }
+    @media (min-width: vars.$bp-md) {
+        &--with-aside {
+            grid-template-columns: 1fr 16rem;
+            align-items: start;
+        }
+        .grid__aside {
+            position: sticky;
+            top: 1rem;
+        }
+    }
+}
+.aside-card {
+    background: vars.$color-card;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}

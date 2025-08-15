@@ -34,7 +34,8 @@ final class DB
             self::$pdo = new PDO($dsn, self::$cfg['user'], self::$cfg['pass'], $opt);
         } catch (PDOException $e) {
             http_response_code(500);
-            exit('Erreur DB: ' . $e->getMessage());
+            error_log('Database connection failed: ' . $e->getMessage());
+            throw new \RuntimeException('Database connection failed');
         }
         return self::$pdo;
     }

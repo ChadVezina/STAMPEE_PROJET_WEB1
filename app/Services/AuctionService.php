@@ -167,4 +167,57 @@ final class AuctionService
         $stmt->execute([$id, $sellerId]);
         return (bool)$stmt->fetchColumn();
     }
+
+    public function getActivePaginated(int $page, int $perPage = 9): array
+    {
+        $page    = max(1, $page);
+        $offset  = ($page - 1) * $perPage;
+
+        $pdo = DB::pdo();
+
+        $count = $pdo->query("
+            SELECT COUNT(*) FROM `Auction`
+            WHERE NOW() BETWEEN auction_start AND auction_end
+        ")->fetchColumn();
+        $total = (int)$count;
+        $pages = max(1, (int)ceil($total / $perPage));
+
+        $stmt = $pdo->prepare("
+            SELECT a.*,
+                   s.name AS stamp_name,
+                   (SELECT url FROM `StampImage` si WHERE si.stamp_id = s.id AND si.is_main=1 LIMIT 1) AS main_image,
+                   (SELECT MAX(b.price) FROM `Bid` b WHERE b.auction_id = a.id) AS current_price
+            FROM `Auction` a
+            JOIN `Stamp` s ON s.id = a.stamp_id
+            WHERE NOW() BETWEEN a.auction_start AND a.auction_end
+            ORDER BY a.auction_end ASC
+            LIMIT :lim OFFSET :off
+        ");
+        $stmt->bindValue(':lim', $perPage, PDO::PARAM_INT);
+        $stmt->bindValue(':off', $offset,  PDO::PARAM_INT);
+        $stmt->execute();
+
+        return [
+            'items' => $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [],
+            'page'  => $page,
+            'pages' => $pages,
+            'total' => $total,
+        ];
+    }
+
+    /** Enchère active liée à un timbre (si unique/en cours) */
+    public function getActiveByStamp(int $stampId): ?array
+    {
+        $stmt = DB::pdo()->prepare("
+            SELECT a.*,
+                   (SELECT MAX(b.price) FROM `Bid` b WHERE b.auction_id = a.id) AS current_price
+            FROM `Auction` a
+            WHERE a.stamp_id = ? AND NOW() BETWEEN a.auction_start AND a.auction_end
+            ORDER BY a.auction_end ASC
+            LIMIT 1
+        ");
+        $stmt->execute([$stampId]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ?: null;
+    }
 }

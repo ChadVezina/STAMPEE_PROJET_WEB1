@@ -1,0 +1,87 @@
+@use "../base/variables" as vars;
+
+.stamp {
+    padding: 1rem;
+    background: #fff;
+
+    &__title {
+        margin: 0.25rem 0 1rem;
+    }
+    &__gallery {
+        display: grid;
+        gap: 1rem;
+    }
+    &__main {
+        width: 100%;
+        padding-top: 100%;
+        background: #1b355a center/cover no-repeat;
+        border-radius: 0.5rem;
+    }
+    &__thumbs {
+        display: flex;
+        gap: 0.5rem;
+        overflow: auto;
+    }
+    &__thumb {
+        width: 4rem;
+        height: 4rem;
+        background: #1b355a center/cover no-repeat;
+        border-radius: 0.25rem;
+    }
+
+    &__cta {
+        margin: 1rem 0;
+        display: grid;
+        gap: 0.5rem;
+    }
+    &__price {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    &__price-value {
+        color: vars.$color-accent;
+        font-weight: 700;
+        font-size: clamp(1.25rem, 4vw, 1.6rem);
+    }
+    &__bid {
+        justify-self: start;
+    }
+
+    &__subtitle {
+        margin: 1.5rem 0 0.75rem;
+    }
+    &__list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 0.25rem;
+    }
+    &__item {
+        padding: 0.4rem 0;
+        border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+    }
+
+    &__bids {
+        margin-top: 1rem;
+    }
+    &__bidlist {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 0.25rem;
+    }
+    &__biditem {
+        display: flex;
+        justify-content: space-between;
+    }
+    &__footer {
+        margin-top: 2rem;
+        padding: 1rem;
+        background: vars.$color-secondary;
+        color: #fff;
+        text-align: center;
+    }
+}

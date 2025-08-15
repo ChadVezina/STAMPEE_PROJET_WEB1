@@ -1,17 +1,14 @@
-/* Variables de couleur */
-$color-primary: #1B355A;   /* Bleu royal profond (couleur principale) */
-$color-secondary: #6B1E2E; /* Bordeaux raffiné (alternative principale) */
-$color-accent: #BFA56A;    /* Or discret (pour accents/feedbacks) */
-$color-neutral-light: #F7F5F2; /* Blanc cassé (fonds, cartes) */
-$color-neutral-dark: #333333;  /* Gris foncé (texte) */
-$color-error: #CC0000;     /* Rouge erreur (pour messages d’erreur) */
+$color-primary: #1B355A;   // bleu en-tête / boutons primaires
+$color-secondary: #6B1E2E; // bordeaux (CTA secondaire)
+$color-accent: #BFA56A;    // or discret (prix / accents)
+$color-bg: #FFFFFF;
+$color-card: #F7F5F2;
+$color-text: #333;
+$color-muted: #8a8a8a;
 
-/*Variables de Polices*/
-$font-title: 'Playfair Display', serif;  /* Police titres élégante */
-$font-body: 'Roboto', sans-serif;        /* Police textes courants */
+$font-title: 'Playfair Display', serif;
+$font-body: 'Roboto', sans-serif;
 
-/*BreakPoints*/
-$bp-sm: 576px;
-$bp-md: 768px;
-$bp-lg: 992px;
-$bp-xl: 1200px;
+$bp-sm: 36rem;   // 576px
+$bp-md: 48rem;   // 768px
+$bp-lg: 62rem;   // 992px

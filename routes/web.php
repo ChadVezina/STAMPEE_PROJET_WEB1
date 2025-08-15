@@ -1,28 +1,26 @@
 <?php
 
 use App\Routes\Route;
+use App\Controllers\PublicController;
 use App\Controllers\AuthController;
-use App\Controllers\HomeController;
 use App\Controllers\AuctionController;
 use App\Controllers\StampController;
 use App\Controllers\BidController;
 
 // Pages publiques (authentification)
-Route::get('/', [AuthController::class, 'showLogin']);
 Route::get('/login', [AuthController::class, 'showLogin']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegister']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/logout', [AuthController::class, 'logout']);
 
-//Pages publiques (Home)
-Route::get('/home', [HomeController::class, 'homePage']);
+// Pages publiques
+Route::get('/', [PublicController::class, 'home']);
+Route::get('/home', [PublicController::class, 'home']); // Alias for navigation consistency
+Route::get('/dashboard', [PublicController::class, 'dashboard']); // User dashboard
 
-// Zone privée minimale (tableau de bord)
-Route::get('/dashboard', [HomeController::class, 'dashboard']);
-
-// Gestion des enchères
-Route::get('/auctions', [AuctionController::class, 'index']);
+// Enchères publiques et gestion des enchères
+Route::get('/auctions', [AuctionController::class, 'publicIndex']); // Public auctions list
 Route::get('/auction/show', [AuctionController::class, 'show']);
 Route::get('/auction/create', [AuctionController::class, 'create']);
 Route::post('/auction/store', [AuctionController::class, 'store']);
@@ -30,8 +28,11 @@ Route::get('/auction/edit', [AuctionController::class, 'edit']);
 Route::post('/auction/update', [AuctionController::class, 'update']);
 Route::post('/auction/delete', [AuctionController::class, 'delete']);
 
-// Gestion des timbres (catégories)
-Route::get('/stamps', [StampController::class, 'index']);
+// Timbres publiques (consultation)
+Route::get('/stamps/show', [StampController::class, 'publicShow']);
+
+// Gestion des timbres (pour administrateurs/utilisateurs connectés)
+Route::get('/stamps', [StampController::class, 'index']); // Changed from /stamp to /stamps for consistency
 Route::get('/stamp/show', [StampController::class, 'show']);
 Route::get('/stamp/create', [StampController::class, 'create']);
 Route::post('/stamp/store', [StampController::class, 'store']);

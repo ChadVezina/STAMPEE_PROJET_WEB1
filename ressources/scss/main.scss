@@ -3,13 +3,21 @@
 @use "base/reset";
 @use "base/global";
 
+// Layout styles
+@use "layout/header";
+@use "layout/footer";
+@use "layout/grid";
+
 // Component styles
 @use "components/buttons";
 @use "components/fields";
 @use "components/forms";
 @use "components/messages";
 @use "components/card";
+@use "components/carousel";
 
 // Page styles
 @use "pages/auth";
-
+@use "pages/home";
+@use "pages/auctions";
+@use "pages/stamp";
