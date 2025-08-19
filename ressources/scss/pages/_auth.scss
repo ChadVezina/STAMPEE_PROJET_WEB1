@@ -11,15 +11,23 @@
 
 .auth-container {
     width: 100%;
-    max-width: 520px;
+    max-width: 720px; // Increased from 520px to accommodate large placeholders
+
+    @media (min-width: 1200px) {
+        max-width: 800px; // Even larger on very wide screens
+    }
 }
 
 .card--auth {
     background: #fff;
     border: 1px solid #e2e6ea;
     border-radius: 12px;
-    padding: 2rem 2.25rem;
+    padding: 2.5rem 3rem; // Increased padding for more space
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+
+    @media (min-width: 1200px) {
+        padding: 3rem 3.5rem; // Even more padding on larger screens
+    }
 }
 
 .card--auth .card__header {
@@ -40,14 +48,32 @@
 }
 
 .field {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem; // Increased from 1.25rem
 }
 .field__label {
-    font-size: 0.9rem;
+    font-size: 1rem; // Increased from 0.9rem
     font-weight: 500;
+    margin-bottom: 0.5rem; // Add some spacing
 }
 .field__input {
     border-radius: 6px;
+    padding: 1rem 1.25rem; // Add larger padding
+    font-size: 1.05rem; // Larger text
+    min-height: 52px; // Consistent height
+
+    @media (min-width: 1200px) {
+        padding: 1.125rem 1.375rem; // Even larger on wide screens
+        font-size: 1.1rem;
+        min-height: 56px;
+    }
+
+    &::placeholder {
+        font-size: 0.95rem; // Ensure placeholder is readable
+
+        @media (min-width: 1200px) {
+            font-size: 1rem;
+        }
+    }
 }
 
 /* Form actions */

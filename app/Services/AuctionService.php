@@ -47,7 +47,16 @@ final class AuctionService
 
     public function getByIdWithMeta(int $id): ?array
     {
-        $row = $this->getById($id);
+        $stmt = DB::pdo()->prepare("
+            SELECT a.*, s.name AS stamp_name, u.nom AS seller_name,
+                   (SELECT url FROM `StampImage` si WHERE si.stamp_id = s.id AND si.is_main=1 LIMIT 1) AS main_image
+            FROM `Auction` a
+            JOIN `Stamp`  s ON s.id = a.stamp_id
+            JOIN `User`   u ON u.id = a.seller_id
+            WHERE a.id = ?
+        ");
+        $stmt->execute([$id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if (!$row) return null;
 
         $stmt = DB::pdo()->prepare("SELECT MAX(price) FROM `Bid` WHERE auction_id = ?");

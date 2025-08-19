@@ -8,6 +8,13 @@ final class ImageProcessor
 {
     public static function createThumbnail(string $sourcePath, string $destinationPath, int $maxWidth = 300, int $maxHeight = 300): bool
     {
+        // Check if GD extension is loaded
+        if (!extension_loaded('gd')) {
+            error_log('GD extension is not loaded. Skipping thumbnail creation.');
+            // Just copy the original file as thumbnail for now
+            return copy($sourcePath, $destinationPath);
+        }
+
         if (!file_exists($sourcePath)) {
             return false;
         }

@@ -38,6 +38,15 @@ $basePath = \App\Core\Config::get('app.base_path', '');
                     </div>
 
                     <div class="stat-card">
+                        <div class="stat-icon">➕</div>
+                        <div class="stat-content">
+                            <h3>Ajouter un timbre</h3>
+                            <p>Ajoutez un nouveau timbre à votre collection</p>
+                            <a href="<?= htmlspecialchars($basePath) ?>/stamps/create" class="button button--primary">Ajouter un timbre</a>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
                         <div class="stat-icon">⚙️</div>
                         <div class="stat-content">
                             <h3>Paramètres</h3>
@@ -45,74 +54,6 @@ $basePath = \App\Core\Config::get('app.base_path', '');
                             <a href="<?= htmlspecialchars($basePath) ?>/dashboard?mode=profile" class="button button--primary">Paramètres</a>
                         </div>
                     </div>
-                </div>
-            </div>
-
-        <?php elseif ($mode === 'add-stamp'): ?>
-            <!-- Add Stamp Form -->
-            <div class="dashboard-form-section">
-                <div class="card">
-                    <div class="card__header">
-                        <h2 class="card__title">
-                            <span class="card__icon">🏷️</span>
-                            Ajouter un timbre
-                        </h2>
-                        <p class="card__subtitle">Ajoutez un nouveau timbre à votre collection</p>
-                    </div>
-
-                    <form class="form form--dashboard" action="<?= htmlspecialchars($basePath) ?>/dashboard/add-stamp" method="post" enctype="multipart/form-data">
-                        <?= CsrfToken::field() ?>
-
-                        <div class="form__row">
-                            <div class="field">
-                                <label class="field__label" for="name">Nom du timbre *</label>
-                                <input class="field__input" type="text" id="name" name="name" required placeholder="Ex: Timbre commémoratif de 1985" />
-                            </div>
-
-                            <div class="field">
-                                <label class="field__label" for="year">Année d'émission *</label>
-                                <input class="field__input" type="number" id="year" name="year" min="1840" max="<?= date('Y') ?>" required placeholder="Ex: 1985" />
-                            </div>
-                        </div>
-
-                        <div class="form__row">
-                            <div class="field">
-                                <label class="field__label" for="color">Couleur principale *</label>
-                                <input class="field__input" type="text" id="color" name="color" required placeholder="Ex: Rouge, Bleu, Multicolore" />
-                            </div>
-
-                            <div class="field">
-                                <label class="field__label" for="country_id">Pays d'origine *</label>
-                                <select class="field__input" id="country_id" name="country_id" required>
-                                    <option value="">Sélectionnez un pays</option>
-                                    <?php if (!empty($countries)): ?>
-                                        <?php foreach ($countries as $country): ?>
-                                            <option value="<?= (int)$country['id'] ?>"><?= htmlspecialchars($country['nom']) ?></option>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <label class="field__label" for="description">Description</label>
-                            <textarea class="field__input" id="description" name="description" rows="4" placeholder="Description détaillée du timbre..."></textarea>
-                        </div>
-
-                        <div class="field">
-                            <label class="field__label" for="images">Images du timbre</label>
-                            <input class="field__input" type="file" id="images" name="images[]" multiple accept="image/*" />
-                            <p class="field__help">Vous pouvez sélectionner plusieurs images (formats acceptés: JPG, PNG, GIF)</p>
-                        </div>
-
-                        <div class="form__actions">
-                            <button type="submit" class="button button--primary">
-                                <span class="button__icon">✅</span>
-                                Ajouter le timbre
-                            </button>
-                            <a href="<?= htmlspecialchars($basePath) ?>/dashboard" class="button button--secondary">Annuler</a>
-                        </div>
-                    </form>
                 </div>
             </div>
 

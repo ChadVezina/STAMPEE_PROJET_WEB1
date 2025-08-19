@@ -1,0 +1,90 @@
+/* Stamps Create Page Styling - Uses shared form components */
+
+/* Page-specific layout */
+:root {
+    --form-max-width: 1100px;
+    --stamps-create-bg: #f8f9fa;
+}
+
+.stamps-create-page {
+    background-color: var(--stamps-create-bg);
+    min-height: 100vh;
+    padding: 2rem 0;
+}
+
+.stamps-create-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    box-sizing: border-box;
+}
+
+/* Page Header */
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    color: var(--form-text-primary);
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.page-subtitle {
+    font-size: 1.1rem;
+    color: var(--form-text-secondary);
+    margin: 0;
+}
+
+/* Form Section Layout */
+.stamps-create-form-section {
+    display: flex;
+    justify-content: center;
+}
+
+.stamps-create-form-section .card {
+    width: 100%;
+    max-width: var(--form-max-width);
+    box-sizing: border-box;
+}
+
+/* Form Container */
+.form--stamps-create {
+    padding: 2rem;
+}
+
+/* Desktop tweaks */
+@media (min-width: 1200px) {
+    :root {
+        --form-max-width: 1300px;
+    }
+
+    .form--stamps-create .field {
+        min-width: 340px;
+    }
+
+    .preview-item img {
+        height: 140px;
+    }
+}
+
+/* Mobile tweaks */
+@media (max-width: 767px) {
+    .stamps-create-container {
+        padding: 0 0.5rem;
+    }
+
+    .page-title {
+        font-size: 2rem;
+    }
+
+    .card__header {
+        padding: 1.5rem 1rem 0.75rem 1rem;
+    }
+
+    .form--stamps-create {
+        padding: 1.5rem 1rem;
+    }
+}

@@ -41,6 +41,11 @@ $base = \App\Core\Config::get('app.base_url');
                                 <p class="card__price">
                                     <?= isset($item['current_price']) && $item['current_price'] ? number_format((float)$item['current_price'], 2) . ' $ CAD' : number_format((float)$item['min_price'], 2) . ' $ CAD' ?>
                                 </p>
+                                <?php if (!empty($item['auction_end'])): ?>
+                                    <div class="card__time-remaining" data-end-time="<?= date('c', strtotime($item['auction_end'])) ?>">
+                                        <span class="card__countdown">Calcul en cours...</span>
+                                    </div>
+                                <?php endif; ?>
                                 <span class="card__badge">Coup de Cœur</span>
                             </div>
                         </a>
@@ -68,7 +73,13 @@ $base = \App\Core\Config::get('app.base_url');
                             <p class="card__price">
                                 <?= isset($auction['current_price']) && $auction['current_price'] ? number_format((float)$auction['current_price'], 2) . ' $ CAD' : number_format((float)$auction['min_price'], 2) . ' $ CAD' ?>
                             </p>
-                            <p class="card__time">Se termine bientôt</p>
+                            <?php if (!empty($auction['auction_end'])): ?>
+                                <div class="card__time-remaining" data-end-time="<?= date('c', strtotime($auction['auction_end'])) ?>">
+                                    <span class="card__countdown">Calcul en cours...</span>
+                                </div>
+                            <?php else: ?>
+                                <p class="card__time">Se termine bientôt</p>
+                            <?php endif; ?>
                         </div>
                     </a>
                 </article>
@@ -122,3 +133,59 @@ $base = \App\Core\Config::get('app.base_url');
         <?php endif; ?>
     </div>
 </section>
+
+<!-- CSS styles moved to ressources/scss/components/_countdown.scss -->
+
+<script>
+    // Countdown Timer Functionality for Home Page
+    function updateHomeCountdowns() {
+        const countdownElements = document.querySelectorAll('.card__countdown');
+
+        countdownElements.forEach(element => {
+            const timeRemaining = element.closest('.card__time-remaining');
+            if (!timeRemaining) return;
+
+            const endTime = new Date(timeRemaining.getAttribute('data-end-time')).getTime();
+            const now = new Date().getTime();
+            const distance = endTime - now;
+
+            if (distance < 0) {
+                element.innerHTML = "Terminée";
+                element.classList.add('urgent');
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            let timeString = '';
+            if (days > 0) {
+                timeString = `${days}j ${hours}h`;
+            } else if (hours > 0) {
+                timeString = `${hours}h ${minutes}m`;
+            } else if (minutes > 0) {
+                timeString = `${minutes}m ${seconds}s`;
+            } else {
+                timeString = `${seconds}s`;
+                element.classList.add('urgent');
+            }
+
+            // Add urgent class when less than 1 hour remains
+            if (distance < 3600000) { // 1 hour in milliseconds
+                element.classList.add('urgent');
+            }
+
+            element.innerHTML = timeString;
+        });
+    }
+
+    // Start countdown if there are countdown elements
+    document.addEventListener('DOMContentLoaded', function() {
+        if (document.querySelector('.card__countdown')) {
+            updateHomeCountdowns(); // Initial update
+            setInterval(updateHomeCountdowns, 1000); // Update every second
+        }
+    });
+</script>

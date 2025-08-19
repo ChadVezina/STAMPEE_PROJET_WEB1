@@ -14,7 +14,10 @@ define('VIEW_PATH', BASE_PATH . '/ressources/views');
 if (file_exists(BASE_PATH . '/.env')) {
   Dotenv::createImmutable(BASE_PATH)->load();
 }
-date_default_timezone_set($_ENV['TIMEZONE'] ?? 'America/Montreal');
+
+// Set timezone - Montreal, Canada (Eastern Time)
+$timezone = $_ENV['TIMEZONE'] ?? 'America/Montreal';
+date_default_timezone_set($timezone);
 
 // Base path/URL (neutralise /public)
 $scheme    = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';

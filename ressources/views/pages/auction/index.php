@@ -1,4 +1,5 @@
 <?php
+
 /** @var array $auctions */
 /** @var int $page */
 /** @var int $pages */
@@ -25,36 +26,30 @@ $base = \App\Core\Config::get('app.base_url');
     <div class="grid__main">
       <?php foreach ($auctions as $a): ?>
         <article class="card card--auction">
-          <a class="card__link" href="<?= $base ?>/stamp/show?id=<?= (int)$a['stamp_id'] ?>">
+          <a class="card__link" href="<?= $base ?>/stamps/show?id=<?= (int)$a['stamp_id'] ?>">
             <div class="card__image" style="background-image:url('<?= htmlspecialchars($a['main_image'] ?? '', ENT_QUOTES) ?>');"></div>
             <h3 class="card__title"><?= htmlspecialchars($a['stamp_name'] ?? 'Timbre') ?></h3>
             <p class="card__price">
               <?= isset($a['current_price']) && $a['current_price'] ? number_format((float)$a['current_price'], 2) . ' $ CAD' : number_format((float)$a['min_price'], 2) . ' $ CAD' ?>
             </p>
+            <?php if (!empty($a['auction_end'])): ?>
+              <div class="card__time-remaining" data-end-time="<?= date('c', strtotime($a['auction_end'])) ?>">
+                <span class="card__countdown">Calcul en cours...</span>
+              </div>
+            <?php endif; ?>
           </a>
         </article>
       <?php endforeach; ?>
     </div>
-
-    <aside class="grid__aside">
-      <!-- Barre latérale (placeholder) -->
-      <div class="aside-card">
-        <h4 class="aside-card__title">Raccourcis</h4>
-        <ul class="aside-card__list">
-          <li><a href="<?= $base ?>/">Accueil</a></li>
-          <li><a href="<?= $base ?>/auctions">Toutes les enchères</a></li>
-        </ul>
-      </div>
-    </aside>
   </div>
 
   <?php if ($pages > 1): ?>
     <nav class="pagination" aria-label="Pagination">
       <span class="pagination__info">Page&nbsp;: <?= $page ?> / <?= $pages ?></span>
       <ul class="pagination__list">
-        <?php for ($i=1; $i<=$pages; $i++): ?>
+        <?php for ($i = 1; $i <= $pages; $i++): ?>
           <li class="pagination__item">
-            <a class="pagination__link<?= $i===$page ? ' pagination__link--active':'' ?>" href="<?= $base ?>/auctions?page=<?= $i ?>"><?= $i ?></a>
+            <a class="pagination__link<?= $i === $page ? ' pagination__link--active' : '' ?>" href="<?= $base ?>/auctions?page=<?= $i ?>"><?= $i ?></a>
           </li>
         <?php endfor; ?>
       </ul>
@@ -63,3 +58,59 @@ $base = \App\Core\Config::get('app.base_url');
 
   <footer class="auctions__footer">© STAMPEE 2025</footer>
 </section>
+
+<!-- CSS styles moved to ressources/scss/components/_countdown.scss -->
+
+<script>
+  // Countdown Timer Functionality for Auction Cards
+  function updateCountdowns() {
+    const countdownElements = document.querySelectorAll('.card__countdown');
+
+    countdownElements.forEach(element => {
+      const timeRemaining = element.closest('.card__time-remaining');
+      if (!timeRemaining) return;
+
+      const endTime = new Date(timeRemaining.getAttribute('data-end-time')).getTime();
+      const now = new Date().getTime();
+      const distance = endTime - now;
+
+      if (distance < 0) {
+        element.innerHTML = "Enchère terminée";
+        element.classList.add('urgent');
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      let timeString = '';
+      if (days > 0) {
+        timeString = `${days}j ${hours}h ${minutes}m`;
+      } else if (hours > 0) {
+        timeString = `${hours}h ${minutes}m ${seconds}s`;
+      } else if (minutes > 0) {
+        timeString = `${minutes}m ${seconds}s`;
+      } else {
+        timeString = `${seconds}s`;
+        element.classList.add('urgent');
+      }
+
+      // Add urgent class when less than 1 hour remains
+      if (distance < 3600000) { // 1 hour in milliseconds
+        element.classList.add('urgent');
+      }
+
+      element.innerHTML = timeString;
+    });
+  }
+
+  // Start countdown if there are auction cards
+  document.addEventListener('DOMContentLoaded', function() {
+    if (document.querySelector('.card__countdown')) {
+      updateCountdowns(); // Initial update
+      setInterval(updateCountdowns, 1000); // Update every second
+    }
+  });
+</script>

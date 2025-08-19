@@ -123,7 +123,11 @@
         }
 
         .form {
-            padding: 2.5rem;
+            padding: 3rem; // Increased from 2.5rem for more space
+
+            @media (min-width: 1200px) {
+                padding: 3.5rem; // Even more padding on larger screens
+            }
         }
 
         &--danger {

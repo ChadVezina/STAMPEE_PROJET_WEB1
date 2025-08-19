@@ -21,7 +21,7 @@
     margin: 0 auto;
     padding: 2rem;
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr ;
+    grid-template-columns: 2fr 1fr 1fr;
     gap: 2rem;
     align-items: start;
 }
@@ -159,13 +159,4 @@
     }
 }
 
-/* Ajustement pour que le footer reste en bas */
-body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-.container {
-    flex: 1;
-}
+/* Ajustement pour que le footer reste en bas - handled by global styles now */

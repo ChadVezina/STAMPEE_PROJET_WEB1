@@ -4,12 +4,47 @@
 html {
     font-size: 100%;
 }
+
 body {
     margin: 0;
     background: vars.$color-bg;
     color: vars.$color-text;
     font-family: vars.$font-body;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
+
+/* Container system */
+.container {
+    flex: 1;
+    width: 100%;
+    margin: 0 auto;
+    padding: 1rem;
+    max-width: 1200px;
+
+    /* Full width for specific pages */
+    &.full-width {
+        max-width: none;
+        padding: 0;
+    }
+}
+
+/* Page-specific full-width handling */
+body[data-page="home"] .container,
+body[data-page="dashboard"] .container,
+body[data-page="auctions"] .container {
+    max-width: none;
+    padding: 0;
+}
+
+/* Specific content containers within full-width pages */
+.content-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
 h1,
 h2,
 h3 {
@@ -17,9 +52,11 @@ h3 {
     color: vars.$color-primary;
     line-height: 1.2;
 }
+
 h1 {
     font-size: clamp(1.6rem, 4vw, 2.2rem);
 }
+
 h2 {
     font-size: clamp(1.3rem, 3vw, 1.8rem);
 }

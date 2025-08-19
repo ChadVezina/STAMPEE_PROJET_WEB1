@@ -16,10 +16,12 @@
 @use "components/card";
 @use "components/carousel";
 @use "components/dropdown";
+@use "components/countdown";
 
 // Page styles
 @use "pages/auth";
 @use "pages/home";
 @use "pages/auctions";
 @use "pages/stamp";
+@use "pages/auction";
 @use "pages/dashboard";

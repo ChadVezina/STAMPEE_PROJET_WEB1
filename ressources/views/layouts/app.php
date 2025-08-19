@@ -199,6 +199,23 @@ $baseUrl = \App\Core\Config::get('app.base_url', '');
       });
     });
   </script>
+
+  <script>
+    // Set page type for container styling
+    document.addEventListener('DOMContentLoaded', function() {
+      const path = window.location.pathname;
+      const body = document.body;
+
+      if (path === '/' || path.endsWith('/home')) {
+        body.setAttribute('data-page', 'home');
+      } else if (path.includes('/dashboard')) {
+        body.setAttribute('data-page', 'dashboard');
+      } else if (path.includes('/auctions') && !path.includes('/show')) {
+        body.setAttribute('data-page', 'auctions');
+      }
+    });
+  </script>
+
   <script src="<?= \App\Core\Config::get('app.base_url') ?>/public/assets/js/forms.js" defer></script>
 </body>
 

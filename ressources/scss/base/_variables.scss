@@ -1,14 +1,72 @@
-$color-primary: #1B355A;   // bleu en-tête / boutons primaires
-$color-secondary: #6B1E2E; // bordeaux (CTA secondaire)
-$color-accent: #BFA56A;    // or discret (prix / accents)
-$color-bg: #FFFFFF;
-$color-card: #F7F5F2;
+// Primary Colors
+$color-primary: #1b355a; // bleu en-tête / boutons primaires
+$color-secondary: #6b1e2e; // bordeaux (CTA secondaire)
+$color-accent: #bfa56a; // or discret (prix / accents)
+
+// Background Colors
+$color-bg: #ffffff;
+$color-card: #f7f5f2;
+$color-neutral-bg: #f8f9fa;
+$color-neutral-light: #f1f3f4;
+
+// Text Colors
 $color-text: #333;
+$color-text-dark: #2c3e50;
+$color-text-light: #495057;
 $color-muted: #8a8a8a;
+$color-gray: #6c757d;
 
-$font-title: 'Playfair Display', serif;
-$font-body: 'Roboto', sans-serif;
+// Interactive Colors
+$color-blue: #007bff;
+$color-blue-light: rgba(0, 123, 255, 0.1);
+$color-blue-border: rgba(0, 123, 255, 0.2);
+$color-blue-hover: #0056b3;
 
-$bp-sm: 36rem;   // 576px
-$bp-md: 48rem;   // 768px
-$bp-lg: 62rem;   // 992px
+$color-success: #28a745;
+$color-success-light: #d4edda;
+$color-success-text: #155724;
+
+$color-warning: #ffc107;
+$color-warning-light: #fff3cd;
+$color-warning-text: #856404;
+
+$color-danger: #dc3545;
+$color-danger-light: #f8d7da;
+$color-danger-text: #721c24;
+$color-danger-hover: #c82333;
+
+$color-info: #17a2b8;
+$color-info-light: #cce7ff;
+$color-info-text: #0066cc;
+
+// Border Colors
+$color-border: #e0e0e0;
+$color-border-light: #e9ecef;
+$color-border-dark: #dee2e6;
+$color-border-input: #d0d6dd;
+$color-info-border: #cce7ff;
+
+// Shadow Colors
+$shadow-light: rgba(0, 0, 0, 0.05);
+$shadow-medium: rgba(0, 0, 0, 0.1);
+$shadow-dark: rgba(28, 40, 50, 0.06);
+
+// State Colors for Stamps
+$color-excellent: #cce7ff;
+$color-excellent-text: #0066cc;
+$color-good: #fff3cd;
+$color-good-text: #856404;
+$color-average: #ffeaa7;
+$color-average-text: #b8860b;
+$color-damaged: #f8d7da;
+$color-damaged-text: #721c24;
+
+// Typography
+$font-title: "Playfair Display", serif;
+$font-body: "Roboto", sans-serif;
+$font-mono: "Courier New", monospace;
+
+// Breakpoints
+$bp-sm: 36rem; // 576px
+$bp-md: 48rem; // 768px
+$bp-lg: 62rem; // 992px

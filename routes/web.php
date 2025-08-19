@@ -21,7 +21,6 @@ Route::get('/home', [PublicController::class, 'home']); // Alias for navigation 
 
 // Dashboard routes
 Route::get('/dashboard', [DashboardController::class, 'index']); // User dashboard
-Route::post('/dashboard/add-stamp', [DashboardController::class, 'addStamp']);
 
 Route::get('/dashboard/password', [DashboardController::class, 'passwordForm']);
 Route::post('/dashboard/password', [DashboardController::class, 'updatePassword']);
@@ -38,14 +37,19 @@ Route::get('/auctions/show', [AuctionController::class, 'show']);
 Route::get('/auctions/create', [AuctionController::class, 'create']);
 Route::post('/auctions/store', [AuctionController::class, 'store']);
 
-// Timbres publiques (consultation)
-Route::get('/stamps/show', [StampController::class, 'publicShow']);
-
 // Gestion des timbres (pour administrateurs/utilisateurs connectés)
 Route::get('/stamps', [StampController::class, 'index']);
-
+Route::get('/stamps/show', [StampController::class, 'show']); // Authenticated stamp view
 Route::get('/stamps/create', [StampController::class, 'create']);
 Route::post('/stamps/store', [StampController::class, 'store']);
+Route::get('/stamps/edit', [StampController::class, 'edit']);
+Route::post('/stamps/update', [StampController::class, 'update']);
+Route::post('/stamps/delete', [StampController::class, 'delete']);
+Route::post('/stamps/image/set-main', [StampController::class, 'setMainImage']);
+Route::post('/stamps/image/delete', [StampController::class, 'deleteImage']);
+
+// Timbres publiques (consultation)
+Route::get('/stamps/public', [StampController::class, 'publicShow']); // Public stamp view
 
 // Gestion des offres
 Route::post('/bid/store', [BidController::class, 'store']);

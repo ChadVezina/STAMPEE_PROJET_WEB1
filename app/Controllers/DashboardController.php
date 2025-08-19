@@ -7,6 +7,9 @@ namespace App\Controllers;
 use App\Core\View;
 use App\Core\CsrfToken;
 use App\Models\User;
+use App\Services\CountryService;
+use App\Services\StampService;
+use App\Core\DB;
 
 final class DashboardController
 {
@@ -19,20 +22,16 @@ final class DashboardController
         $mode = $data['mode'] ?? $_GET['mode'] ?? 'default';
         $user = $_SESSION['user'];
 
+        // Redirect deprecated add-stamp mode to the official stamps/create route
+        if ($mode === 'add-stamp') {
+            View::redirect('/stamps/create');
+            return;
+        }
+
         View::render('pages/dashboard/index', [
             'user' => $user,
             'mode' => $mode
         ]);
-    }
-
-    public function addStamp(array $data): void
-    {
-        $this->requireAuth();
-        $this->validateCsrfOrRedirect($data['_token'] ?? null, '/dashboard');
-
-        // Handle stamp creation logic here
-        // For now, redirect back to dashboard
-        $this->redirectWithSuccess('Fonctionnalité en développement.', '/dashboard');
     }
 
     public function emailForm(): void
