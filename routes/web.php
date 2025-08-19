@@ -6,6 +6,7 @@ use App\Controllers\AuthController;
 use App\Controllers\AuctionController;
 use App\Controllers\StampController;
 use App\Controllers\BidController;
+use App\Controllers\DashboardController;
 
 // Pages publiques (authentification)
 Route::get('/login', [AuthController::class, 'showLogin']);
@@ -17,28 +18,34 @@ Route::get('/logout', [AuthController::class, 'logout']);
 // Pages publiques
 Route::get('/', [PublicController::class, 'home']);
 Route::get('/home', [PublicController::class, 'home']); // Alias for navigation consistency
-Route::get('/dashboard', [PublicController::class, 'dashboard']); // User dashboard
+
+// Dashboard routes
+Route::get('/dashboard', [DashboardController::class, 'index']); // User dashboard
+Route::post('/dashboard/add-stamp', [DashboardController::class, 'addStamp']);
+
+Route::get('/dashboard/password', [DashboardController::class, 'passwordForm']);
+Route::post('/dashboard/password', [DashboardController::class, 'updatePassword']);
+
+Route::get('/dashboard/email', [DashboardController::class, 'emailForm']);
+Route::post('/dashboard/email', [DashboardController::class, 'updateEmail']);
+
+Route::get('/dashboard/delete', [DashboardController::class, 'deleteForm']);
+Route::post('/dashboard/delete', [DashboardController::class, 'deleteAccount']);
 
 // Enchères publiques et gestion des enchères
 Route::get('/auctions', [AuctionController::class, 'publicIndex']); // Public auctions list
-Route::get('/auction/show', [AuctionController::class, 'show']);
-Route::get('/auction/create', [AuctionController::class, 'create']);
-Route::post('/auction/store', [AuctionController::class, 'store']);
-Route::get('/auction/edit', [AuctionController::class, 'edit']);
-Route::post('/auction/update', [AuctionController::class, 'update']);
-Route::post('/auction/delete', [AuctionController::class, 'delete']);
+Route::get('/auctions/show', [AuctionController::class, 'show']);
+Route::get('/auctions/create', [AuctionController::class, 'create']);
+Route::post('/auctions/store', [AuctionController::class, 'store']);
 
 // Timbres publiques (consultation)
 Route::get('/stamps/show', [StampController::class, 'publicShow']);
 
 // Gestion des timbres (pour administrateurs/utilisateurs connectés)
-Route::get('/stamps', [StampController::class, 'index']); // Changed from /stamp to /stamps for consistency
-Route::get('/stamp/show', [StampController::class, 'show']);
-Route::get('/stamp/create', [StampController::class, 'create']);
-Route::post('/stamp/store', [StampController::class, 'store']);
-Route::get('/stamp/edit', [StampController::class, 'edit']);
-Route::post('/stamp/update', [StampController::class, 'update']);
-Route::post('/stamp/delete', [StampController::class, 'delete']);
+Route::get('/stamps', [StampController::class, 'index']);
+
+Route::get('/stamps/create', [StampController::class, 'create']);
+Route::post('/stamps/store', [StampController::class, 'store']);
 
 // Gestion des offres
 Route::post('/bid/store', [BidController::class, 'store']);

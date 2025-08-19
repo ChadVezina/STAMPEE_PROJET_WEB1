@@ -10,6 +10,30 @@
     font-weight: 600;
     text-align: center;
     text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 44px; // Touch target size
+    box-sizing: border-box;
+
+    // Responsive improvements
+    @media (max-width: 768px) {
+        padding: 0.875rem 1rem;
+        font-size: 0.95rem;
+        min-width: 120px;
+    }
+
+    @media (max-width: 480px) {
+        padding: 0.75rem 0.875rem;
+        font-size: 0.9rem;
+        min-width: 100px;
+
+        // Shorter button text on very small screens
+        &__icon {
+            margin-right: 0.25rem;
+        }
+    }
 
     &--primary {
         background: vars.$color-primary;
@@ -20,10 +44,32 @@
         background: vars.$color-secondary;
         color: #fff;
     }
+
+    &--tertiary {
+        background: #6b7280;
+        color: #fff;
+    }
+
+    &--danger {
+        background: #dc2626;
+        color: #fff;
+    }
+
     &--ghost {
         background: transparent;
         color: vars.$color-primary;
         border: 1px solid vars.$color-primary;
+    }
+
+    &--outline {
+        background: transparent;
+        color: vars.$color-primary;
+        border: 2px solid vars.$color-primary;
+
+        &:hover:not(:disabled):not(.button--disabled) {
+            background: vars.$color-primary;
+            color: #fff;
+        }
     }
 
     &:hover:not(:disabled):not(.button--disabled) {

@@ -25,7 +25,7 @@ final class StampController
     public function index(): void
     {
         $stamps = $this->stampService->listWithCountryAndMainImage();
-        View::render('pages/stamp/index', ['stamps' => $stamps]);
+        View::render('pages/stamps/index', ['stamps' => $stamps]);
     }
 
     public function show(array $data): void
@@ -38,14 +38,14 @@ final class StampController
         if (!$stamp) {
             $this->redirectWithError('Timbre introuvable.', '/stamps');
         }
-        View::render('pages/stamp/show', ['stamp' => $stamp]);
+        View::render('pages/stamps/show', ['stamp' => $stamp]);
     }
 
     public function create(): void
     {
         $this->requireAuth();
         $countries = (new CountryService())->listAll();
-        View::render('pages/stamp/create', ['countries' => $countries]);
+        View::render('pages/stamps/create', ['countries' => $countries]);
     }
 
     public function store(array $data): void
@@ -55,7 +55,7 @@ final class StampController
         }
         if (!CsrfToken::check($data['_token'] ?? null)) {
             $_SESSION['flash']['error'] = 'CSRF invalide.';
-            View::redirect('/stamp/create');
+            View::redirect('/stamps/create');
         }
 
         $ok = $this->stampService->createFromForm($data);
@@ -78,7 +78,7 @@ final class StampController
             View::redirect('/stamps');
         }
         $countries = (new CountryService())->listAll();
-        View::render('pages/stamp/edit', ['stamp' => $stamp, 'countries' => $countries]);
+        View::render('pages/stamps/edit', ['stamp' => $stamp, 'countries' => $countries]);
     }
 
     public function update(array $data): void
@@ -136,7 +136,7 @@ final class StampController
             $bids = (new BidService())->getByAuction((int)$auction['id']);
         }
 
-        View::render('pages/stamp/index', [
+        View::render('pages/stamps/index', [
             'stamp'   => $stamp,
             'auction' => $auction,
             'bids'    => $bids

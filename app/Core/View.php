@@ -6,7 +6,7 @@ final class View
 {
     public static function render(string $view, array $data = []): void
     {
-        // Ensure required constants are defined
+        // Use BASE_PATH if already defined, otherwise define it
         if (!defined('BASE_PATH')) {
             define('BASE_PATH', dirname(__DIR__, 2));
         }

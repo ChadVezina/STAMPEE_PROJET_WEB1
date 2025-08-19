@@ -26,7 +26,7 @@ final class BidController
         $userId = (int)$_SESSION['user']['id'];
         $ok = (new BidService())->placeBid($auctionId, $userId, $price);
 
-        $redirectUrl = "/auction/show?id=$auctionId";
+        $redirectUrl = "/auctions/show?id=$auctionId";
         if ($ok) {
             $this->redirectWithSuccess('Offre placée.', $redirectUrl);
         } else {
@@ -49,9 +49,9 @@ final class BidController
         $userId = (int)$_SESSION['user']['id'];
         $ok = (new BidService())->delete($bidId, $userId);
 
-        $redirectUrl = "/auction/show?id=$auctionId";
+        $redirectUrl = "/auctions/show?id=$auctionId";
         if ($ok) {
-            $this->redirectWithSuccess('Offre supprimée.', $redirectUrl);
+            $this->redirectWithSuccess('Offre retirée.', $redirectUrl);
         } else {
             $this->redirectWithError('Suppression refusée.', $redirectUrl);
         }

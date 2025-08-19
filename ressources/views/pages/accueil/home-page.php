@@ -61,7 +61,7 @@ $base = \App\Core\Config::get('app.base_url');
         <div class="offers-grid">
             <?php foreach (array_slice($running, 0, 6) as $auction): ?>
                 <article class="card card--auction">
-                    <a class="card__link" href="<?= $base ?>/auction/show?id=<?= (int)$auction['id'] ?>">
+                    <a class="card__link" href="<?= $base ?>/auctions/show?id=<?= (int)$auction['id'] ?>">
                         <div class="card__image" style="background-image:url('<?= htmlspecialchars($auction['main_image'] ?? '', ENT_QUOTES) ?>');"></div>
                         <div class="card__content">
                             <h3 class="card__title"><?= htmlspecialchars($auction['stamp_name'] ?? 'Timbre') ?></h3>

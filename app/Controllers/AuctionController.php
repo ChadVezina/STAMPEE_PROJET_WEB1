@@ -56,7 +56,7 @@ final class AuctionController
     public function store(array $data): void
     {
         $this->requireAuth();
-        $this->validateCsrfOrRedirect($data['_token'] ?? null, '/auction/create');
+        $this->validateCsrfOrRedirect($data['_token'] ?? null, '/auctions/create');
 
         $stampId = (int)($data['stamp_id'] ?? 0);
         $minPrice = (float)($data['min_price'] ?? 0);
@@ -65,16 +65,16 @@ final class AuctionController
         $favorite = (isset($data['favorite']) && $data['favorite'] === '1');
 
         if ($stampId <= 0 || $minPrice <= 0 || $start === '' || $end === '') {
-            $this->redirectWithError('Champs requis manquants/invalides.', '/auction/create');
+            $this->redirectWithError('Champs requis manquants/invalides.', '/auctions/create');
         }
 
         $sellerId = (int)$_SESSION['user']['id'];
         $newId = $this->auctionService->create($stampId, $sellerId, $start, $end, $minPrice, $favorite);
         if (!$newId) {
-            $this->redirectWithError('Création échouée (dates/prix).', '/auction/create');
+            $this->redirectWithError('Création échouée (dates/prix).', '/auctions/create');
         }
 
-        $this->redirectWithSuccess('Enchère créée.', '/auction/show?id=' . $newId);
+        $this->redirectWithSuccess('Enchère créée.', '/auctions/show?id=' . $newId);
     }
 
     public function edit(array $data): void
@@ -118,8 +118,8 @@ final class AuctionController
             $this->redirectWithError('Mise à jour refusée/échouée.', '/auction/edit?id=' . $id);
         }
 
-        $this->redirectWithSuccess('Enchère mise à jour.', '/auction/show?id=' . $id);
-        View::redirect('/auction/show?id=' . $id);
+        $this->redirectWithSuccess('Enchère mise à jour.', '/auctions/show?id=' . $id);
+        View::redirect('/auctions/show?id=' . $id);
     }
 
     public function delete(array $data): void

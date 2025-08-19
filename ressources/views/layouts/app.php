@@ -21,9 +21,38 @@ $baseUrl = \App\Core\Config::get('app.base_url', '');
         </h1>
       </div>
       <div class="header-profile">
-        <div class="profile-placeholder">
-          <img src="<?= htmlspecialchars($baseUrl) ?>/assets/img/user-placeholder.svg" alt="Profil utilisateur" class="profile-image">
-        </div>
+        <?php if (!empty($_SESSION['user'])): ?>
+          <div class="profile-dropdown">
+            <button class="profile-dropdown__toggle" aria-label="Menu utilisateur" aria-expanded="false">
+              <img src="<?= htmlspecialchars($baseUrl) ?>/assets/img/user-placeholder.svg" alt="Profil utilisateur" class="profile-image">
+              <span class="profile-dropdown__caret">▼</span>
+            </button>
+            <div class="profile-dropdown__menu">
+              <div class="profile-dropdown__header">
+                <strong><?= htmlspecialchars($_SESSION['user']['nom']) ?></strong>
+                <span><?= htmlspecialchars($_SESSION['user']['email']) ?></span>
+              </div>
+              <div class="profile-dropdown__divider"></div>
+              <a href="<?= htmlspecialchars($basePath) ?>/dashboard?mode=add-stamp" class="profile-dropdown__item">
+                <span class="profile-dropdown__icon">🏷️</span>
+                Ajouter un timbre
+              </a>
+              <a href="<?= htmlspecialchars($basePath) ?>/dashboard?mode=profile" class="profile-dropdown__item">
+                <span class="profile-dropdown__icon">👤</span>
+                Mon profil
+              </a>
+              <div class="profile-dropdown__divider"></div>
+              <a href="<?= htmlspecialchars($basePath) ?>/logout" class="profile-dropdown__item profile-dropdown__item--danger">
+                <span class="profile-dropdown__icon">🚪</span>
+                Déconnexion
+              </a>
+            </div>
+          </div>
+        <?php else: ?>
+          <div class="profile-placeholder">
+            <img src="<?= htmlspecialchars($baseUrl) ?>/assets/img/user-placeholder.svg" alt="Profil utilisateur" class="profile-image">
+          </div>
+        <?php endif; ?>
       </div>
     </div>
 
@@ -32,9 +61,7 @@ $baseUrl = \App\Core\Config::get('app.base_url', '');
     <nav class="header-nav">
       <a href="<?= htmlspecialchars($basePath) ?>/" class="nav-link">Accueil</a>
       <?php if (!empty($_SESSION['user'])): ?>
-        <a href="<?= htmlspecialchars($basePath) ?>/dashboard" class="nav-link">Tableau de bord</a>
         <a href="<?= htmlspecialchars($basePath) ?>/auctions" class="nav-link">Enchères</a>
-        <a href="<?= htmlspecialchars($basePath) ?>/logout" class="nav-link">Déconnexion</a>
       <?php else: ?>
         <a href="<?= htmlspecialchars($basePath) ?>/auctions" class="nav-link">Enchères</a>
         <a href="<?= htmlspecialchars($basePath) ?>/login" class="nav-link">Connexion</a>
@@ -104,6 +131,75 @@ $baseUrl = \App\Core\Config::get('app.base_url', '');
       });
     </script>
   <?php endif; ?>
+
+  <!-- Profile dropdown functionality -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const dropdownToggle = document.querySelector('.profile-dropdown__toggle');
+      const dropdownMenu = document.querySelector('.profile-dropdown__menu');
+
+      if (dropdownToggle && dropdownMenu) {
+        dropdownToggle.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const isActive = dropdownMenu.classList.contains('profile-dropdown__menu--active');
+          dropdownMenu.classList.toggle('profile-dropdown__menu--active');
+          dropdownToggle.setAttribute('aria-expanded', !isActive);
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+          // If we click on a link inside the dropdown (or its children), let it navigate
+          const clickedLink = e.target.closest('a');
+          if (clickedLink && dropdownMenu.contains(clickedLink)) {
+            dropdownMenu.classList.remove('profile-dropdown__menu--active');
+            dropdownToggle.setAttribute('aria-expanded', 'false');
+            return; // Let the link navigate
+          }
+
+          if (!dropdownToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
+            dropdownMenu.classList.remove('profile-dropdown__menu--active');
+            dropdownToggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+
+        // Close dropdown on escape key
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            dropdownMenu.classList.remove('profile-dropdown__menu--active');
+            dropdownToggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+    });
+
+    // Password toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const toggleButtons = document.querySelectorAll('.field__toggle');
+
+      toggleButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+          e.preventDefault();
+
+          const wrapper = this.closest('.field__input-wrapper');
+          const input = wrapper.querySelector('.field__input');
+          const hideIcon = this.querySelector('.field__toggle-icon--hide');
+          const showIcon = this.querySelector('.field__toggle-icon--show');
+
+          if (input.type === 'password') {
+            input.type = 'text';
+            this.classList.add('is-visible');
+            this.setAttribute('aria-label', 'Masquer le mot de passe');
+          } else {
+            input.type = 'password';
+            this.classList.remove('is-visible');
+            this.setAttribute('aria-label', 'Afficher le mot de passe');
+          }
+        });
+      });
+    });
+  </script>
+  <script src="<?= \App\Core\Config::get('app.base_url') ?>/public/assets/js/forms.js" defer></script>
 </body>
 
 </html>
