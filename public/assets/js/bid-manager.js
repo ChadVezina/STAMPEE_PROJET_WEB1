@@ -185,7 +185,7 @@ class BidManager {
                                 ${isWinning ? '<span class="bid-status-badge winning">En tête</span>' : ""}
                             </div>
                             <div class="bid-meta">
-                                <span class="bid-time">${bidTime.toLocaleDateString("fr-FR")} ${bidTime.toLocaleTimeString("fr-FR", {
+                                <span class="bid-time">${bidTime.toLocaleDateString("fr-CA")} ${bidTime.toLocaleTimeString("fr-CA", {
                     hour: "2-digit",
                     minute: "2-digit",
                     second: "2-digit",
@@ -320,9 +320,9 @@ class BidManager {
     }
 
     formatPrice(amount) {
-        return new Intl.NumberFormat("fr-FR", {
+        return new Intl.NumberFormat("fr-CA", {
             style: "currency",
-            currency: "EUR",
+            currency: "CAD",
         }).format(amount);
     }
 
@@ -365,7 +365,7 @@ class BidSuggestions {
             .map(
                 (amount) =>
                     `<button type="button" class="bid-suggestion" data-amount="${amount}">
-                ${new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(amount)}
+                ${new Intl.NumberFormat("fr-CA", { style: "currency", currency: "CAD" }).format(amount)}
             </button>`
             )
             .join("");

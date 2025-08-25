@@ -8,7 +8,7 @@ final class Storage
 {
     private const UPLOAD_DIR = '/storage/media';
     private const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-    private const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    private const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB
 
     public static function uploadFile(array $file, string $subdirectory = 'stamps'): ?string
     {

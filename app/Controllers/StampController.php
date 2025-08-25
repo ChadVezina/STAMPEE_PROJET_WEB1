@@ -67,7 +67,7 @@ final class StampController
         $allowedExt = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'jfif', 'bmp', 'tiff', 'tif', 'svg', 'ico', 'avif'];
         $allowedMime = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/bmp', 'image/tiff', 'image/svg+xml', 'image/x-icon', 'image/avif'];
         $maxFiles = 5;
-        $maxSize = 5 * 1024 * 1024; // 5MB
+        $maxSize = 1 * 1024 * 1024; // 1MB
 
         if (!empty($_FILES['stamp_images']) && is_array($_FILES['stamp_images']['name'])) {
             $filesCount = count(array_filter($_FILES['stamp_images']['name']));
@@ -85,7 +85,7 @@ final class StampController
 
                 $size = $_FILES['stamp_images']['size'][$i];
                 if ($size > $maxSize) {
-                    $_SESSION['flash']['error'] = 'Une des images dépasse la taille maximale de 5MB.';
+                    $_SESSION['flash']['error'] = 'Une des images dépasse la taille maximale de 1MB.';
                     finfo_close($finfo);
                     View::redirect('/stamps/create');
                 }

@@ -12,7 +12,26 @@ $baseUrl = \App\Core\Config::get('app.base_url', '');
   <link href="<?= htmlspecialchars($baseUrl) ?>/assets/css/main.css" rel="stylesheet">
 </head>
 
-<body>
+<?php
+// Determine page type server-side so CSS can target containers immediately
+// Normalize request and base path to detect page type reliably when app is in a subfolder
+$requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+$requestPath = rtrim($requestPath, '/');
+$basePathNormalized = rtrim($basePath, ' /');
+
+$pageType = 'default';
+
+// Home: request equals base path or root
+if ($requestPath === '' || $requestPath === '/' || $requestPath === $basePathNormalized || $requestPath === $basePathNormalized . '/index.php') {
+  $pageType = 'home';
+} elseif (strpos($requestPath, $basePathNormalized . '/dashboard') === 0 || strpos($requestPath, '/dashboard') === 0) {
+  $pageType = 'dashboard';
+} elseif ((strpos($requestPath, $basePathNormalized . '/auctions') === 0 || strpos($requestPath, '/auctions') === 0) && strpos($requestPath, '/show') === false) {
+  $pageType = 'auctions';
+}
+?>
+
+<body data-page="<?= htmlspecialchars($pageType, ENT_QUOTES) ?>">
   <header class="main-header">
     <div class="header-top">
       <div class="header-brand">

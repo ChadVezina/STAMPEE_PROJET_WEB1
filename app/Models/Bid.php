@@ -189,14 +189,14 @@ final class Bid
 
         $minPrice = (float)$auction['min_price'];
         if ($price < $minPrice) {
-            $errors[] = "L'offre doit être d'au moins " . number_format($minPrice, 2) . " €.";
+            $errors[] = "L'offre doit \u00eatre d'au moins " . number_format($minPrice, 2) . " $ CAD.";
         }
 
         // Vérifier par rapport aux autres offres
         $highestBid = self::findHighestByAuction($auctionId);
         if ($highestBid && $price <= (float)$highestBid['price']) {
             $required = (float)$highestBid['price'] + 0.01;
-            $errors[] = "Votre offre doit être supérieure à " . number_format($required, 2) . " €.";
+            $errors[] = "Votre offre doit \u00eatre sup\u00e9rieure \u00e0 " . number_format($required, 2) . " $ CAD.";
         }
 
         return $errors;

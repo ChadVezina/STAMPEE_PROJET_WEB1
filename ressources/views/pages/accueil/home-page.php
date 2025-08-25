@@ -111,24 +111,35 @@ $base = \App\Core\Config::get('app.base_url');
 <!-- RECENT (full width, last card acquired datetime, CARD) -->
 <section class="recent-acquisitions">
     <div class="section__container">
-        <h2 class="section__title">Acquisitions récentes</h2>
+        <h2 class="section__title">Actualités</h2>
         <p class="section__subtitle">Les dernières trouvailles de nos collectionneurs</p>
 
         <?php if (!empty($running)): ?>
             <?php $recent = $running[0]; // Get the most recent one 
             ?>
             <article class="recent-card">
-                <div class="recent-card__content">
-                    <div class="recent-card__image" style="background-image:url('<?= htmlspecialchars($recent['main_image'] ?? '', ENT_QUOTES) ?>');"></div>
-                    <div class="recent-card__info">
-                        <h3 class="recent-card__title"><?= htmlspecialchars($recent['stamp_name'] ?? 'Timbre') ?></h3>
-                        <p class="recent-card__description">Acquis récemment par un collectionneur passionné</p>
-                        <p class="recent-card__price">
-                            <?= isset($recent['current_price']) && $recent['current_price'] ? number_format((float)$recent['current_price'], 2) . ' $ CAD' : number_format((float)$recent['min_price'], 2) . ' $ CAD' ?>
-                        </p>
-                        <time class="recent-card__time">Il y a quelques instants</time>
+                <a class="recent-card__link" href="<?= $base ?>/auctions/show?id=<?= (int)($recent['id'] ?? 0) ?>">
+                    <div class="recent-card__content">
+                        <div class="recent-card__image" style="background-image:url('<?= htmlspecialchars($recent['main_image'] ?? '', ENT_QUOTES) ?>');"></div>
+                        <div class="recent-card__info">
+                            <h3 class="recent-card__title"><?= htmlspecialchars($recent['stamp_name'] ?? 'Timbre') ?></h3>
+                            <?php
+                            // Description: si dernier enchérisseur disponible, afficher "Dernière mise par {User}" sinon "Acquis par {User}" si un champ buyer existe
+                            $desc = 'Acquis récemment par un collectionneur passionné';
+                            if (!empty($recent['last_bid_user'])) {
+                                $desc = 'Dernière mise par ' . htmlspecialchars($recent['last_bid_user']);
+                            } elseif (!empty($recent['buyer_name'])) {
+                                $desc = 'Acquis par ' . htmlspecialchars($recent['buyer_name']);
+                            }
+                            ?>
+                            <p class="recent-card__description"><?= $desc ?></p>
+                            <p class="recent-card__price">
+                                <?= isset($recent['current_price']) && $recent['current_price'] ? number_format((float)$recent['current_price'], 2) . ' $ CAD' : number_format((float)$recent['min_price'], 2) . ' $ CAD' ?>
+                            </p>
+                            <time class="recent-card__time" data-last-bid-time="<?= htmlspecialchars($recent['last_bid_time'] ?? '') ?>">Il y a quelques instants</time>
+                        </div>
                     </div>
-                </div>
+                </a>
             </article>
         <?php endif; ?>
     </div>
@@ -187,5 +198,47 @@ $base = \App\Core\Config::get('app.base_url');
             updateHomeCountdowns(); // Initial update
             setInterval(updateHomeCountdowns, 1000); // Update every second
         }
+    });
+</script>
+
+<script>
+    // Met à jour les éléments <time data-last-bid-time> en texte relatif simple
+    function pluralize(n, singular, plural) {
+        return n + ' ' + (n > 1 ? plural : singular);
+    }
+
+    function updateRecentCardTimes() {
+        const els = document.querySelectorAll('time.recent-card__time[data-last-bid-time]');
+        els.forEach(el => {
+            const ts = el.getAttribute('data-last-bid-time');
+            if (!ts) return;
+            const date = new Date(ts);
+            if (isNaN(date.getTime())) return;
+
+            const now = Date.now();
+            let diff = Math.floor((now - date.getTime()) / 1000); // seconds
+
+            const days = Math.floor(diff / 86400);
+            diff %= 86400;
+            const hours = Math.floor(diff / 3600);
+            diff %= 3600;
+            const minutes = Math.floor(diff / 60);
+
+            const parts = [];
+            if (days > 0) parts.push(pluralize(days, 'jour', 'jours'));
+            if (hours > 0) parts.push(pluralize(hours, 'heure', 'heures'));
+            if (minutes > 0) parts.push(pluralize(minutes, 'minute', 'minutes'));
+
+            if (parts.length === 0) {
+                el.textContent = "Il y a moins d'une minute";
+            } else {
+                el.textContent = 'Il y a ' + parts.join(' ');
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        updateRecentCardTimes();
+        setInterval(updateRecentCardTimes, 60000); // rafraîchir chaque minute
     });
 </script>

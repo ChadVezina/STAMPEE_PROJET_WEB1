@@ -816,13 +816,67 @@
 
 .image-upload-section {
     border: 2px dashed $color-border;
-    border-radius: 8px;
-    padding: 1rem;
+    border-radius: 12px;
+    padding: 1.25rem;
     text-align: center;
-    transition: border-color 0.3s ease;
+    transition: all 0.18s ease;
+    background: linear-gradient(180deg, rgba($color-bg, 0.02), rgba($color-neutral-bg, 0.02));
+    min-height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    position: relative;
+    overflow: hidden;
 
-    &:hover {
+    /* Make the label act like the visible upload area */
+    label[for="stamp_images"] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        border: 1px solid transparent;
+        background: $color-bg;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        cursor: pointer;
+        font-weight: 600;
+        color: $color-blue;
+        transition: all 0.18s ease;
+
+        &:before {
+            content: "📤";
+            font-size: 1.4rem;
+            display: inline-block;
+        }
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+            border-color: $color-blue;
+        }
+    }
+
+    /* Hide native file input but keep it accessible (covers area) */
+    input[type="file"] {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .form-text {
+        margin-top: 0.5rem;
+        color: $color-gray;
+        font-size: 0.95rem;
+    }
+
+    &.drag-over {
         border-color: $color-blue;
+        background: linear-gradient(180deg, rgba($color-blue, 0.03), rgba($color-neutral-bg, 0.02));
     }
 }
 

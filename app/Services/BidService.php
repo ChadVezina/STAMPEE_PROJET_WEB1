@@ -97,7 +97,7 @@ final class BidService
             $required = $threshold + 0.01;
             return [
                 'success' => false,
-                'errors' => ["Votre offre doit être supérieure à " . number_format($required, 2) . " €."],
+                'errors' => ["Votre offre doit \":' être supérieure à " . number_format($required, 2) . " $ CAD."],
                 'bid_id' => null
             ];
         }
@@ -323,14 +323,14 @@ final class BidService
 
         $minPrice = (float)$auction['min_price'];
         if ($price < $minPrice) {
-            $errors[] = "L'offre doit être d'au moins " . number_format($minPrice, 2) . " €.";
+            $errors[] = "L'offre doit \":' être d'au moins " . number_format($minPrice, 2) . " $ CAD.";
         }
 
         // Vérifier par rapport aux autres offres
         $currentHighest = $this->getCurrentThreshold($auctionId);
         if ($price <= $currentHighest) {
             $required = $currentHighest + 0.01;
-            $errors[] = "Votre offre doit être supérieure à " . number_format($required, 2) . " €.";
+            $errors[] = "Votre offre doit \":' être supérieure à " . number_format($required, 2) . " $ CAD.";
         }
 
         return $errors;

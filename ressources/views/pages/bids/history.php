@@ -35,8 +35,8 @@ $currentUserId = (int)$_SESSION['user']['id'];
                                     </a>
                                 </h3>
                                 <div class="auction-meta">
-                                    <span class="winning-bid">Votre offre: <?= number_format($auction['winning_bid'], 2) ?> €</span>
-                                    <span class="auction-end">Fin: <?= date('d/m/Y à H:i', strtotime($auction['auction_end'])) ?></span>
+                                    <span class="winning-bid">Votre offre: <?= number_format($auction['winning_bid'], 2) . ' $ CAD' ?></span>
+                                    <span class="auction-end">Fin: <?= date('d/m/Y \u00e0 H:i', strtotime($auction['auction_end'])) ?></span>
                                 </div>
                             </div>
                             <div class="auction-actions">
@@ -101,7 +101,7 @@ $currentUserId = (int)$_SESSION['user']['id'];
                             </div>
 
                             <div class="table-cell">
-                                <span class="bid-amount"><?= number_format($bid['price'], 2) ?> €</span>
+                                <span class="bid-amount"><?= number_format($bid['price'], 2) . ' $ CAD' ?></span>
                             </div>
 
                             <div class="table-cell">

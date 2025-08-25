@@ -90,12 +90,12 @@ function timeAgo($datetime)
                 <div class="auction-info">
                     <div class="info-card">
                         <div class="info-label">Prix minimum</div>
-                        <div class="info-value price"><?= number_format($auction['min_price'], 2) ?> €</div>
+                        <div class="info-value price"><?= number_format($auction['min_price'], 2) . ' $ CAD' ?></div>
                     </div>
 
                     <div class="info-card">
                         <div class="info-label">Offre actuelle</div>
-                        <div class="info-value price"><?= number_format($auction_stats['highest_bid'] ?? $auction['min_price'], 2) ?> €</div>
+                        <div class="info-value price"><?= number_format($auction_stats['highest_bid'] ?? $auction['min_price'], 2) . ' $ CAD' ?></div>
                     </div>
 
                     <div class="info-card">
@@ -152,7 +152,7 @@ function timeAgo($datetime)
                                         class="bid-price-input"
                                         min="<?= $minimum_bid ?>"
                                         step="0.01"
-                                        placeholder="Minimum: <?= number_format($minimum_bid, 2) ?> €"
+                                        placeholder="Minimum: <?= number_format($minimum_bid, 2) . ' $ CAD' ?>"
                                         required>
 
                                     <button type="submit" id="bid-submit" class="bid-submit-btn">
@@ -166,7 +166,7 @@ function timeAgo($datetime)
                                 <div id="bid-suggestions"></div>
 
                                 <div class="bid-help">
-                                    <small>Montant minimum: <span id="minimum-bid"><?= number_format($minimum_bid, 2) ?> €</span></small>
+                                    <small>Montant minimum: <span id="minimum-bid"><?= number_format($minimum_bid, 2) . ' $ CAD' ?></span></small>
                                 </div>
                             </form>
                         <?php else: ?>
@@ -199,7 +199,7 @@ function timeAgo($datetime)
                     <?php if ($auction_stats['average_bid'] > 0): ?>
                         <div class="stat">
                             <span class="label">Offre moyenne:</span>
-                            <span class="value"><?= number_format($auction_stats['average_bid'], 2) ?> €</span>
+                            <span class="value"><?= number_format($auction_stats['average_bid'], 2) . ' $ CAD' ?></span>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -239,7 +239,7 @@ function timeAgo($datetime)
                                     </div>
                                     <div class="bid-amount-section">
                                         <div class="bid-amount <?= $isWinning ? 'winning' : '' ?>">
-                                            <?= number_format($bid['price'], 2) ?> €
+                                            <?= number_format($bid['price'], 2) . ' $ CAD' ?>
                                         </div>
                                         <?php if ($index > 0 && isset($bids[$index])): ?>
                                             <?php
