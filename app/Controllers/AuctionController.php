@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Core\View;
-use App\Core\CsrfToken;
 use App\Services\AuctionService;
 use App\Services\BidService;
 use App\Services\StampService;
@@ -32,17 +31,39 @@ final class AuctionController
         $id = isset($data['id']) ? (int)$data['id'] : 0;
         if ($id <= 0) {
             $this->redirectWithError('Enchère introuvable.', '/auctions');
+            return;
         }
 
         $auction = $this->auctionService->getByIdWithMeta($id);
         if (!$auction) {
             $this->redirectWithError('Enchère introuvable.', '/auctions');
+            return;
         }
 
-        $bids = (new BidService())->getByAuction($id);
+        $bidService = new BidService();
+        $bids = $bidService->getByAuction($id);
+        $auctionStats = $bidService->getAuctionStats($id);
+
+        // Informations pour l'utilisateur connecté
+        $userCanBid = false;
+        $userIsWinning = false;
+        $minimumBid = $bidService->getMinimumNextBid($id);
+
+        if (isset($_SESSION['user'])) {
+            $userId = (int)$_SESSION['user']['id'];
+            $bidPermission = $bidService->canUserBid($id, $userId);
+            $userCanBid = $bidPermission['can_bid'];
+            $userIsWinning = $bidService->isUserWinning($id, $userId);
+        }
+
         View::render('pages/auction/show', [
             'auction' => $auction,
-            'bids'    => $bids,
+            'bids' => $bids,
+            'auction_stats' => $auctionStats,
+            'user_can_bid' => $userCanBid,
+            'user_is_winning' => $userIsWinning,
+            'minimum_bid' => $minimumBid,
+            'is_active' => $this->auctionService->isActive($id)
         ]);
     }
 
@@ -62,7 +83,7 @@ final class AuctionController
         $minPrice = (float)($data['min_price'] ?? 0);
         $start = trim($data['auction_start'] ?? '');
         $end   = trim($data['auction_end'] ?? '');
-        $favorite = (isset($data['favorite']) && $data['favorite'] === '1');
+        $favorite = isset($data['favorite']) && $data['favorite'] === '1';
 
         if ($stampId <= 0 || $minPrice <= 0 || $start === '' || $end === '') {
             $this->redirectWithError('Champs requis manquants/invalides.', '/auctions/create');
@@ -74,7 +95,7 @@ final class AuctionController
             $this->redirectWithError('Création échouée (dates/prix).', '/auctions/create');
         }
 
-        $this->redirectWithSuccess('Enchère créée.', '/auctions/show?id=' . $newId);
+        $this->redirectWithSuccess('Enchère créée.', "/auctions/show?id=$newId");
     }
 
     public function edit(array $data): void
@@ -107,7 +128,7 @@ final class AuctionController
         $minPrice = (float)($data['min_price'] ?? 0);
         $start = trim($data['auction_start'] ?? '');
         $end   = trim($data['auction_end'] ?? '');
-        $favorite = (isset($data['favorite']) && $data['favorite'] === '1');
+        $favorite = isset($data['favorite']) && $data['favorite'] === '1';
 
         if ($id <= 0 || $stampId <= 0 || $minPrice <= 0 || $start === '' || $end === '') {
             $this->redirectWithError('Données invalides.', '/auctions');
@@ -118,7 +139,7 @@ final class AuctionController
             $this->redirectWithError('Mise à jour refusée/échouée.', '/auction/edit?id=' . $id);
         }
 
-        $this->redirectWithSuccess('Enchère mise à jour.', '/auctions/show?id=' . $id);
+        $this->redirectWithSuccess('Enchère mise à jour.', "/auctions/show?id=$id");
         View::redirect('/auctions/show?id=' . $id);
     }
 

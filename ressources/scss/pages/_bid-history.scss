@@ -1,0 +1,230 @@
+// Page historique des enchères utilisateur
+@use "sass:color";
+@use "../base/variables" as vars;
+
+/* Page d'historique des enchères */
+.bid-history-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.page-header {
+    margin-bottom: 30px;
+
+    h1 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 2rem;
+        font-weight: 700;
+    }
+}
+
+/* Section enchères gagnantes */
+.winning-section,
+.history-section {
+    margin-bottom: 40px;
+
+    h2 {
+        color: #333;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+}
+
+.winning-auctions {
+    display: grid;
+    gap: 15px;
+}
+
+.winning-auction-card {
+    background: #f8f9fa;
+    border: 2px solid #28a745;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+
+    &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+
+    .auction-info {
+        flex: 1;
+
+        h3 {
+            margin: 0 0 10px 0;
+
+            a {
+                color: #007bff;
+                text-decoration: none;
+                font-weight: 600;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+}
+
+.auction-meta {
+    display: flex;
+    gap: 20px;
+    font-size: 14px;
+    color: #666;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+
+.winning-bid {
+    font-weight: 600;
+    color: #28a745;
+}
+
+/* Tableau d'historique */
+.bid-history-table {
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-header,
+.table-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+    gap: 15px;
+    padding: 15px 20px;
+    align-items: center;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+}
+
+.table-header {
+    background: #f8f9fa;
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
+    color: #495057;
+
+    @media (max-width: 768px) {
+        display: none;
+    }
+}
+
+.table-row {
+    border-bottom: 1px solid #f8f9fa;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: #f8f9fa;
+    }
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.table-cell {
+    @media (max-width: 768px) {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 0;
+
+        &:before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: #666;
+            font-size: 12px;
+        }
+    }
+}
+
+.stamp-info {
+    strong {
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    small {
+        color: #666;
+        font-size: 12px;
+    }
+}
+
+/* État vide */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 2px dashed #dee2e6;
+
+    .empty-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        opacity: 0.6;
+    }
+
+    h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 1.25rem;
+    }
+
+    p {
+        color: #666;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+}
+
+/* États de validation */
+.validation-success {
+    color: #28a745;
+    font-size: 12px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    &:before {
+        content: "✓";
+        font-weight: bold;
+    }
+}
+
+.validation-error {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    &:before {
+        content: "⚠";
+        font-weight: bold;
+    }
+}

@@ -16,8 +16,8 @@ $base = \App\Core\Config::get('app.base_url');
     <?= Form::input(['type' => 'date', 'name' => 'created_at', 'label' => 'Date de création (si connue)', 'value' => $stamp['created_at'], 'placeholder' => 'YYYY-MM-DD']); ?>
 
     <?php
-    $opts = array('' => '— Pays d\'origine —');
-    foreach (isset($countries) ? $countries : [] as $c) {
+    $opts = ['' => '— Pays d\'origine —'];
+    foreach ($countries ?? [] as $c) {
         $opts[$c['iso2']] = $c['name_fr'];
     }
     echo Form::select(['name' => 'country_code', 'label' => 'Pays', 'options' => $opts, 'value' => $stamp['country_code']]);

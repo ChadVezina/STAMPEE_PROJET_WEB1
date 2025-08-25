@@ -18,6 +18,9 @@
 @use "components/dropdown";
 @use "components/countdown";
 
+// Bidding system (consolidated)
+@use "components/bidding";
+
 // Page styles
 @use "pages/auth";
 @use "pages/home";
@@ -25,3 +28,4 @@
 @use "pages/stamp";
 @use "pages/auction";
 @use "pages/dashboard";
+@use "pages/bid-history" as bid-history-page;

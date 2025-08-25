@@ -2,6 +2,12 @@
 
 /** @var array $auction */
 /** @var array $bids */
+/** @var array $auction_stats */
+/** @var bool $user_can_bid */
+/** @var bool $user_is_winning */
+/** @var float $minimum_bid */
+/** @var bool $is_active */
+
 $base = \App\Core\Config::get('app.base_url');
 
 // Format auction dates
@@ -9,18 +15,32 @@ $startDate = new DateTime($auction['auction_start']);
 $endDate = new DateTime($auction['auction_end']);
 $now = new DateTime();
 
-$isActive = $now >= $startDate && $now <= $endDate;
 $hasEnded = $now > $endDate;
 $hasStarted = $now >= $startDate;
+$isActive = $is_active; // Use the variable passed from controller
 
 // Get main image
-$mainImage = '';
-if (!empty($auction['main_image'])) {
-    $mainImage = $auction['main_image'];
+$mainImage = $auction['main_image'] ?? '';
+
+// Current user
+$currentUserId = isset($_SESSION['user']) ? (int)$_SESSION['user']['id'] : 0;
+$isLoggedIn = $currentUserId > 0;
+
+// Helper function for time ago
+function timeAgo($datetime)
+{
+    $time = time() - strtotime($datetime);
+    if ($time < 60) return 'il y a ' . $time . 's';
+    if ($time < 3600) return 'il y a ' . floor($time / 60) . 'min';
+    if ($time < 86400) return 'il y a ' . floor($time / 3600) . 'h';
+    return 'il y a ' . floor($time / 86400) . 'j';
 }
 ?>
 
-<div class="auction-detail">
+<link rel="stylesheet" href="<?= $base ?>/assets/css/main.css">
+
+<div class="auction-detail" data-auction-id="<?= $auction['id'] ?>" data-current-bid="<?= $auction_stats['highest_bid'] ?? $auction['min_price'] ?>">
+    <!-- Header avec navigation et statut -->
     <div class="auction-header">
         <div class="breadcrumb">
             <a href="<?= $base ?>/auctions" class="breadcrumb-link">Enchères</a>
@@ -40,6 +60,7 @@ if (!empty($auction['main_image'])) {
     </div>
 
     <div class="auction-content">
+        <!-- Informations principales -->
         <div class="auction-main">
             <div class="stamp-preview">
                 <?php if ($mainImage): ?>
@@ -62,80 +83,177 @@ if (!empty($auction['main_image'])) {
                 </div>
             </div>
 
-            <div class="auction-info">
+            <div class="auction-info-section">
                 <h1 class="auction-title"><?= htmlspecialchars($auction['stamp_name']) ?></h1>
 
+                <!-- Informations de l'enchère -->
+                <div class="auction-info">
+                    <div class="info-card">
+                        <div class="info-label">Prix minimum</div>
+                        <div class="info-value price"><?= number_format($auction['min_price'], 2) ?> €</div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-label">Offre actuelle</div>
+                        <div class="info-value price"><?= number_format($auction_stats['highest_bid'] ?? $auction['min_price'], 2) ?> €</div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-label">Nombre d'offres</div>
+                        <div class="info-value"><?= $auction_stats['total_bids'] ?></div>
+                    </div>
+
+                    <?php if ($isActive): ?>
+                        <div class="info-card">
+                            <div class="info-label">Temps restant</div>
+                            <div class="info-value countdown-timer" data-end-time="<?= date('c', strtotime($auction['auction_end'])) ?>">
+                                Calcul en cours...
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Vendeur et dates -->
                 <div class="auction-meta">
                     <div class="meta-item">
                         <strong>Vendeur:</strong>
                         <?= htmlspecialchars($auction['seller_name'] ?? 'Non spécifié') ?>
                     </div>
-
-                    <div class="meta-item">
-                        <strong>Prix minimum:</strong>
-                        <span class="price"><?= number_format($auction['min_price'], 2) ?> €</span>
-                    </div>
-
                     <div class="meta-item">
                         <strong>Début:</strong>
                         <?= $startDate->format('d/m/Y à H:i') ?>
                     </div>
-
                     <div class="meta-item">
                         <strong>Fin:</strong>
                         <?= $endDate->format('d/m/Y à H:i') ?>
                     </div>
                 </div>
 
-                <?php if ($isActive): ?>
-                    <div class="auction-countdown">
-                        <h3>Temps restant</h3>
-                        <div class="countdown-display" data-end-time="<?= date('c', strtotime($auction['auction_end'])) ?>">
-                            <span class="countdown-timer">Calcul en cours...</span>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <?php if ($isActive): ?>
-                    <div class="bidding-section">
+                <!-- Section enchères -->
+                <?php if ($isActive && $isLoggedIn): ?>
+                    <div class="bid-section">
                         <h3>Faire une enchère</h3>
-                        <form action="<?= $base ?>/bid/store" method="post" class="bid-form">
-                            <input type="hidden" name="_token" value="<?= \App\Core\CsrfToken::token() ?>">
-                            <input type="hidden" name="auction_id" value="<?= $auction['id'] ?>">
 
-                            <div class="form-group">
-                                <label for="amount" class="form-label">Montant (€)</label>
-                                <input type="number"
-                                    id="amount"
-                                    name="amount"
-                                    class="form-input"
-                                    min="<?= $auction['min_price'] ?>"
-                                    step="0.01"
-                                    required>
+                        <?php if ($user_is_winning): ?>
+                            <div class="winning-notice">
+                                🎉 Vous êtes actuellement en tête de cette enchère !
                             </div>
+                        <?php endif; ?>
 
-                            <button type="submit" class="button button--primary button--full">
-                                Enchérir
-                            </button>
-                        </form>
+                        <?php if ($user_can_bid): ?>
+                            <form id="bid-form" class="bid-form" action="<?= $base ?>/bid/ajax-store" method="POST" data-auction-id="<?= $auction['id'] ?>">
+                                <input type="hidden" name="_token" value="<?= \App\Core\CsrfToken::token() ?>">
+                                <input type="hidden" name="auction_id" value="<?= $auction['id'] ?>">
+
+                                <div class="bid-input-group">
+                                    <input type="number"
+                                        id="bid-price"
+                                        name="price"
+                                        class="bid-price-input"
+                                        min="<?= $minimum_bid ?>"
+                                        step="0.01"
+                                        placeholder="Minimum: <?= number_format($minimum_bid, 2) ?> €"
+                                        required>
+
+                                    <button type="submit" id="bid-submit" class="bid-submit-btn">
+                                        Placer l'offre
+                                    </button>
+                                </div>
+
+                                <div id="bid-errors" class="bid-errors"></div>
+
+                                <!-- Suggestions de montants -->
+                                <div id="bid-suggestions"></div>
+
+                                <div class="bid-help">
+                                    <small>Montant minimum: <span id="minimum-bid"><?= number_format($minimum_bid, 2) ?> €</span></small>
+                                </div>
+                            </form>
+                        <?php else: ?>
+                            <div class="auction-closed">
+                                Vous ne pouvez pas miser sur cette enchère.
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                <?php elseif (!$isLoggedIn && $isActive): ?>
+                    <div class="bid-section">
+                        <div class="login-prompt">
+                            <p>Connectez-vous pour participer à cette enchère.</p>
+                            <a href="<?= $base ?>/login" class="button button--primary">Se connecter</a>
+                        </div>
                     </div>
                 <?php endif; ?>
             </div>
         </div>
 
+        <!-- Sidebar avec historique et statistiques -->
         <div class="auction-sidebar">
-            <div class="bids-section">
-                <h3>Historique des enchères</h3>
+            <!-- Statistiques -->
+            <div id="auction-stats" class="stats-section">
+                <h3>Statistiques</h3>
+                <div class="auction-stats">
+                    <div class="stat">
+                        <span class="label">Enchérisseurs uniques:</span>
+                        <span class="value"><?= $auction_stats['unique_bidders'] ?></span>
+                    </div>
+                    <?php if ($auction_stats['average_bid'] > 0): ?>
+                        <div class="stat">
+                            <span class="label">Offre moyenne:</span>
+                            <span class="value"><?= number_format($auction_stats['average_bid'], 2) ?> €</span>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Historique des offres -->
+            <div class="bid-history">
+                <h3 class="bid-history-title">Historique des enchères</h3>
 
                 <?php if (empty($bids)): ?>
                     <p class="no-bids">Aucune enchère pour le moment.</p>
                 <?php else: ?>
-                    <div class="bids-list">
-                        <?php foreach ($bids as $bid): ?>
-                            <div class="bid-item">
-                                <div class="bid-amount"><?= number_format($bid['amount'], 2) ?> €</div>
-                                <div class="bid-bidder"><?= htmlspecialchars($bid['bidder_name'] ?? 'Anonyme') ?></div>
-                                <div class="bid-time"><?= date('d/m à H:i', strtotime($bid['created_at'])) ?></div>
+                    <div class="bid-list">
+                        <?php foreach ($bids as $index => $bid): ?>
+                            <?php
+                            $isWinning = $index === 0; // Premier = plus élevé
+                            $isOwnBid = $isLoggedIn && (int)$bid['bidder_id'] === $currentUserId;
+                            $bidClasses = '';
+                            if ($isWinning) $bidClasses .= ' winning';
+                            if ($isOwnBid) $bidClasses .= ' own-bid';
+                            ?>
+                            <div class="bid-item<?= $bidClasses ?>">
+                                <div class="bid-card">
+                                    <div class="bidder-info">
+                                        <div class="bidder-name">
+                                            <?= $isOwnBid ? 'Vous' : htmlspecialchars($bid['bidder_name']) ?>
+                                            <?php if ($isWinning): ?>
+                                                <span class="bid-status-badge winning">En tête</span>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="bid-meta">
+                                            <div class="bid-time">
+                                                <?= date('d/m/Y à H:i:s', strtotime($bid['bid_at'])) ?>
+                                            </div>
+                                            <div class="time-ago"><?= timeAgo($bid['bid_at']) ?></div>
+                                        </div>
+                                    </div>
+                                    <div class="bid-amount-section">
+                                        <div class="bid-amount <?= $isWinning ? 'winning' : '' ?>">
+                                            <?= number_format($bid['price'], 2) ?> €
+                                        </div>
+                                        <?php if ($index > 0 && isset($bids[$index])): ?>
+                                            <?php
+                                            $previousBid = $bids[$index];
+                                            if (isset($previousBid['price'])) {
+                                                $increase = (($bid['price'] - $previousBid['price']) / $previousBid['price']) * 100;
+                                                if ($increase > 0) {
+                                                    echo '<span class="increase-percent">+' . number_format($increase, 1) . '%</span>';
+                                                }
+                                            }
+                                            ?>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -145,22 +263,21 @@ if (!empty($auction['main_image'])) {
     </div>
 </div>
 
-<!-- CSS styles moved to ressources/scss/pages/_auction.scss and ressources/scss/components/_countdown.scss -->
+<script src="<?= $base ?>/assets/js/bid-manager.js"></script>
 
 <script>
-    // Countdown Timer Functionality for Auction Detail
+    // Countdown Timer 
     function updateCountdown() {
         const countdownElement = document.querySelector('.countdown-timer');
         if (!countdownElement) return;
 
-        const countdownDisplay = countdownElement.closest('.countdown-display');
-        const endTime = new Date(countdownDisplay.getAttribute('data-end-time')).getTime();
+        const endTime = new Date(countdownElement.getAttribute('data-end-time')).getTime();
         const now = new Date().getTime();
         const distance = endTime - now;
 
         if (distance < 0) {
-            countdownElement.innerHTML = "Enchère terminée";
-            countdownElement.classList.add('urgent');
+            countdownElement.innerHTML = "Terminée";
+            countdownElement.classList.add('danger');
             return;
         }
 
@@ -171,29 +288,27 @@ if (!empty($auction['main_image'])) {
 
         let timeString = '';
         if (days > 0) {
-            timeString = `${days} jour${days > 1 ? 's' : ''}, ${hours}h ${minutes}m ${seconds}s`;
+            timeString = `${days}j ${hours}h ${minutes}m`;
         } else if (hours > 0) {
             timeString = `${hours}h ${minutes}m ${seconds}s`;
         } else if (minutes > 0) {
             timeString = `${minutes}m ${seconds}s`;
+            countdownElement.classList.add('warning');
         } else {
             timeString = `${seconds}s`;
-            countdownElement.classList.add('urgent');
-        }
-
-        // Add urgent class when less than 1 hour remains
-        if (distance < 3600000) { // 1 hour in milliseconds
-            countdownElement.classList.add('urgent');
+            countdownElement.classList.add('danger');
         }
 
         countdownElement.innerHTML = timeString;
     }
 
-    // Start countdown if there's an active auction
+    // Start countdown
     document.addEventListener('DOMContentLoaded', function() {
         if (document.querySelector('.countdown-timer')) {
-            updateCountdown(); // Initial update
-            setInterval(updateCountdown, 1000); // Update every second
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
         }
+
+        console.log('🎯 Système d\'enchères chargé pour l\'enchère ID:', document.querySelector('[data-auction-id]')?.dataset.auctionId);
     });
 </script>

@@ -54,3 +54,10 @@ Route::get('/stamps/public', [StampController::class, 'publicShow']); // Public 
 // Gestion des offres
 Route::post('/bid/store', [BidController::class, 'store']);
 Route::post('/bid/delete', [BidController::class, 'delete']);
+Route::get('/bid/history', [BidController::class, 'history']);
+
+// API pour les enchères (AJAX)
+Route::get('/bid/can-bid', [BidController::class, 'canBid']);
+Route::get('/bid/auction-stats', [BidController::class, 'auctionStats']);
+Route::post('/bid/validate', [BidController::class, 'validateBidAmount']);
+Route::post('/bid/ajax-store', [BidController::class, 'ajaxStore']);

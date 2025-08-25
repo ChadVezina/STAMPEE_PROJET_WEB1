@@ -45,7 +45,7 @@ class Route
         $path = $requestUri;
 
         // Remove base path if present (case-insensitive)
-        if ($basePath !== '' && str_starts_with(strtolower($path), strtolower($basePath))) {
+        if ($basePath !== '' && stripos($path, $basePath) === 0) {
             $path = substr($path, strlen($basePath)) ?: '/';
         }
 

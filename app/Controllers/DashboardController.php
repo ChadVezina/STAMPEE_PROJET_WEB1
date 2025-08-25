@@ -7,9 +7,7 @@ namespace App\Controllers;
 use App\Core\View;
 use App\Core\CsrfToken;
 use App\Models\User;
-use App\Services\CountryService;
-use App\Services\StampService;
-use App\Core\DB;
+
 
 final class DashboardController
 {
@@ -67,7 +65,9 @@ final class DashboardController
         }
 
         if (!User::updateEmail((int)$user['id'], $email)) {
-            $_SESSION['flash']['error'] = 'Mise à jour email refusée.';
+            // Vérifier si l'email existe déjà
+            $existingUser = User::findByEmail($email);
+            $_SESSION['flash']['error'] = ($existingUser && $existingUser['id'] !== (int) $_SESSION['user']['id']) ? 'Cet email est déjà utilisé par un autre compte.' : 'Erreur lors de la mise à jour de l\'email. Veuillez réessayer.';
             View::redirect('/dashboard/email');
         }
         $_SESSION['user']['email'] = $email;
@@ -108,7 +108,7 @@ final class DashboardController
 
         $hash = password_hash($new, PASSWORD_DEFAULT);
         if (!User::updatePassword((int)$user['id'], $hash)) {
-            $_SESSION['flash']['error'] = 'Mise à jour refusée.';
+            $_SESSION['flash']['error'] = 'Erreur lors de la mise à jour du mot de passe. Veuillez réessayer.';
             View::redirect('/dashboard/password');
         }
         $_SESSION['flash']['success'] = 'Mot de passe mis à jour.';
@@ -146,7 +146,7 @@ final class DashboardController
         }
 
         if (!User::deleteById((int)$user['id'])) {
-            $_SESSION['flash']['error'] = 'Suppression refusée (liens actifs ?).';
+            $_SESSION['flash']['error'] = 'Impossible de supprimer le compte. Vous avez peut-être des enchères ou offres actives.';
             View::redirect('/dashboard/delete');
         }
 

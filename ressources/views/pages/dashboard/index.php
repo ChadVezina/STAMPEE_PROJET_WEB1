@@ -108,7 +108,7 @@ $basePath = \App\Core\Config::get('app.base_path', '');
                         <p class="card__subtitle">Modifiez votre mot de passe de connexion</p>
                     </div>
 
-                    <form class="form form--dashboard" action="<?= htmlspecialchars($basePath) ?>/dashboard/change-password" method="post">
+                    <form class="form form--dashboard" action="<?= htmlspecialchars($basePath) ?>/dashboard/password" method="post">
                         <?= CsrfToken::field() ?>
 
                         <div class="field field--password">
@@ -187,18 +187,23 @@ $basePath = \App\Core\Config::get('app.base_path', '');
                         <p class="card__subtitle">Votre adresse actuelle: <strong><?= htmlspecialchars($u['email']) ?></strong></p>
                     </div>
 
-                    <form class="form form--dashboard" action="<?= htmlspecialchars($basePath) ?>/dashboard/change-email" method="post">
+                    <form class="form form--dashboard" action="<?= htmlspecialchars($basePath) ?>/dashboard/email" method="post">
                         <?= CsrfToken::field() ?>
 
                         <div class="field">
                             <label class="field__label" for="new_email">Nouvelle adresse e-mail *</label>
-                            <input class="field__input" type="email" id="new_email" name="new_email" required />
+                            <input class="field__input" type="email" id="new_email" name="email" required />
+                        </div>
+
+                        <div class="field">
+                            <label class="field__label" for="confirm_email">Confirmer l'adresse e-mail *</label>
+                            <input class="field__input" type="email" id="confirm_email" name="confirm_email" required />
                         </div>
 
                         <div class="field field--password">
                             <label class="field__label" for="password">Mot de passe actuel *</label>
                             <div class="field__input-wrapper">
-                                <input class="field__input" type="password" id="password" name="password" required />
+                                <input class="field__input" type="password" id="password" name="current_password" required />
                                 <button type="button" class="field__toggle" aria-label="Afficher/masquer le mot de passe">
                                     <svg class="field__toggle-icon field__toggle-icon--hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -237,13 +242,13 @@ $basePath = \App\Core\Config::get('app.base_path', '');
                         <p class="card__subtitle">Cette action est irréversible. Toutes vos données seront définitivement supprimées.</p>
                     </div>
 
-                    <form class="form form--dashboard" action="<?= htmlspecialchars($basePath) ?>/dashboard/delete-account" method="post">
+                    <form class="form form--dashboard" action="<?= htmlspecialchars($basePath) ?>/dashboard/delete" method="post">
                         <?= CsrfToken::field() ?>
 
                         <div class="field field--password">
                             <label class="field__label" for="password">Mot de passe *</label>
                             <div class="field__input-wrapper">
-                                <input class="field__input" type="password" id="password" name="password" required />
+                                <input class="field__input" type="password" id="password" name="current_password" required />
                                 <button type="button" class="field__toggle" aria-label="Afficher/masquer le mot de passe">
                                     <svg class="field__toggle-icon field__toggle-icon--hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -259,7 +264,7 @@ $basePath = \App\Core\Config::get('app.base_path', '');
 
                         <div class="field">
                             <label class="field__label" for="confirmation">Tapez "SUPPRIMER" pour confirmer *</label>
-                            <input class="field__input" type="text" id="confirmation" name="confirmation" required placeholder="SUPPRIMER" />
+                            <input class="field__input" type="text" id="confirmation" name="confirm_phrase" required placeholder="SUPPRIMER" />
                             <p class="field__help">Tapez exactement "SUPPRIMER" (en majuscules) pour confirmer la suppression</p>
                         </div>
 

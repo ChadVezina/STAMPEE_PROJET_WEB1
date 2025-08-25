@@ -6,7 +6,7 @@ $base = \App\Core\Config::get('app.base_url');
   <h1>Supprimer mon compte</h1>
   <p class="field__hint">Action irréversible. Vos données seront supprimées définitivement.</p>
 
-  <?= Form::open(['action'=> "$base/dashboard/supprimer",'method'=>'POST','attrs'=>['data-guard'=>'delete']]); ?>
+  <?= Form::open(['action'=> "$base/dashboard/delete",'method'=>'POST','attrs'=>['data-guard'=>'delete']]); ?>
   <?= \App\Core\CsrfToken::field(); ?>
 
   <?= Form::password(['name'=>'current_password','label'=>'Mot de passe actuel','required'=>true,'toggle'=>true]); ?>
