@@ -143,62 +143,23 @@ final class Bid
     }
 
     /**
-     * Valide les règles métier pour une nouvelle offre
+     * Récupère les offres récentes pour la section actualités
      */
-    public static function validateBid(int $auctionId, int $userId, float $price): array
+    public static function findRecentBids(int $limit = 5): array
     {
-        $errors = [];
-
-        // Récupérer les informations de l'enchère
         $stmt = DB::pdo()->prepare("
-            SELECT a.*, u.nom AS seller_name
-            FROM `Auction` a
-            JOIN `User` u ON u.id = a.seller_id
-            WHERE a.id = ?
+            SELECT b.*, u.nom AS bidder_name, a.id AS auction_id, s.name AS stamp_name,
+                   si.url AS stamp_image, a.auction_start, a.auction_end
+            FROM `Bid` b
+            JOIN `User` u ON u.id = b.user_id
+            JOIN `Auction` a ON a.id = b.auction_id
+            JOIN `Stamp` s ON s.id = a.stamp_id
+            LEFT JOIN `StampImage` si ON si.stamp_id = s.id AND si.is_main = 1
+            WHERE a.auction_end > NOW()  -- Only show bids from active or upcoming auctions
+            ORDER BY b.bid_at DESC
+            LIMIT ?
         ");
-        $stmt->execute([$auctionId]);
-        $auction = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$auction) {
-            $errors[] = "Enchère introuvable.";
-            return $errors;
-        }
-
-        // Vérifier les dates d'enchère
-        $now = new DateTime();
-        $auctionStart = new DateTime($auction['auction_start']);
-        $auctionEnd = new DateTime($auction['auction_end']);
-
-        if ($now < $auctionStart) {
-            $errors[] = "L'enchère n'a pas encore commencé.";
-        }
-
-        if ($now > $auctionEnd) {
-            $errors[] = "L'enchère est terminée.";
-        }
-
-        // Vérifier que l'utilisateur n'est pas le vendeur
-        if ((int)$auction['seller_id'] === $userId) {
-            $errors[] = "Vous ne pouvez pas miser sur votre propre enchère.";
-        }
-
-        // Vérifier le montant minimum
-        if ($price <= 0) {
-            $errors[] = "Le montant de l'offre doit être positif.";
-        }
-
-        $minPrice = (float)$auction['min_price'];
-        if ($price < $minPrice) {
-            $errors[] = "L'offre doit \u00eatre d'au moins " . number_format($minPrice, 2) . " $ CAD.";
-        }
-
-        // Vérifier par rapport aux autres offres
-        $highestBid = self::findHighestByAuction($auctionId);
-        if ($highestBid && $price <= (float)$highestBid['price']) {
-            $required = (float)$highestBid['price'] + 0.01;
-            $errors[] = "Votre offre doit \u00eatre sup\u00e9rieure \u00e0 " . number_format($required, 2) . " $ CAD.";
-        }
-
-        return $errors;
+        $stmt->execute([$limit]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

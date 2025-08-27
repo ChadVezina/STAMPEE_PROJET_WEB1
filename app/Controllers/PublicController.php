@@ -20,6 +20,7 @@ final class PublicController
 
         $featured = $fav->listFeatured(10);            // "Coup de Cœur du Lord"
         $running  = $au->getActivePaginated(1, 8)['items']; // petites cartes "Offres en cours"
+        $recentBids = Bid::findRecentBids(5); // Recent bids for "Actualités" section
 
         // Enrichir chaque enchère avec le dernier enchérisseur (nom + date) si présent
         foreach ($running as &$r) {
@@ -32,6 +33,7 @@ final class PublicController
         View::render('pages/accueil/home-page', [
             'featured' => $featured,
             'running'  => $running,
+            'recentBids' => $recentBids,
         ]);
     }
 

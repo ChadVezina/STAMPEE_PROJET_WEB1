@@ -112,35 +112,34 @@ $base = \App\Core\Config::get('app.base_url');
 <section class="recent-acquisitions">
     <div class="section__container">
         <h2 class="section__title">Actualités</h2>
-        <p class="section__subtitle">Les dernières trouvailles de nos collectionneurs</p>
+        <p class="section__subtitle">Les dernières mises de nos collectionneurs</p>
 
-        <?php if (!empty($running)): ?>
-            <?php $recent = $running[0]; // Get the most recent one 
-            ?>
-            <article class="recent-card">
-                <a class="recent-card__link" href="<?= $base ?>/auctions/show?id=<?= (int)($recent['id'] ?? 0) ?>">
-                    <div class="recent-card__content">
-                        <div class="recent-card__image" style="background-image:url('<?= htmlspecialchars($recent['main_image'] ?? '', ENT_QUOTES) ?>');"></div>
-                        <div class="recent-card__info">
-                            <h3 class="recent-card__title"><?= htmlspecialchars($recent['stamp_name'] ?? 'Timbre') ?></h3>
-                            <?php
-                            // Description: si dernier enchérisseur disponible, afficher "Dernière mise par {User}" sinon "Acquis par {User}" si un champ buyer existe
-                            $desc = 'Acquis récemment par un collectionneur passionné';
-                            if (!empty($recent['last_bid_user'])) {
-                                $desc = 'Dernière mise par ' . htmlspecialchars($recent['last_bid_user']);
-                            } elseif (!empty($recent['buyer_name'])) {
-                                $desc = 'Acquis par ' . htmlspecialchars($recent['buyer_name']);
-                            }
-                            ?>
-                            <p class="recent-card__description"><?= $desc ?></p>
-                            <p class="recent-card__price">
-                                <?= isset($recent['current_price']) && $recent['current_price'] ? number_format((float)$recent['current_price'], 2) . ' $ CAD' : number_format((float)$recent['min_price'], 2) . ' $ CAD' ?>
-                            </p>
-                            <time class="recent-card__time" data-last-bid-time="<?= htmlspecialchars($recent['last_bid_time'] ?? '') ?>">Il y a quelques instants</time>
-                        </div>
-                    </div>
-                </a>
-            </article>
+        <?php if (!empty($recentBids)): ?>
+            <div class="news-grid">
+                <?php foreach ($recentBids as $bid): ?>
+                    <article class="recent-card">
+                        <a class="recent-card__link" href="<?= $base ?>/auctions/show?id=<?= (int)$bid['auction_id'] ?>">
+                            <div class="recent-card__content">
+                                <div class="recent-card__image" style="background-image:url('<?= htmlspecialchars($bid['stamp_image'] ?? '', ENT_QUOTES) ?>');"></div>
+                                <div class="recent-card__info">
+                                    <h3 class="recent-card__title"><?= htmlspecialchars($bid['stamp_name'] ?? 'Timbre') ?></h3>
+                                    <p class="recent-card__description">
+                                        <?= htmlspecialchars($bid['bidder_name']) ?> a récemment miser <?= number_format((float)$bid['price'], 2) ?> $ CAD
+                                    </p>
+                                    <p class="recent-card__price">
+                                        Mise de <?= number_format((float)$bid['price'], 2) ?> $ CAD
+                                    </p>
+                                    <time class="recent-card__time" data-last-bid-time="<?= htmlspecialchars($bid['bid_at']) ?>">
+                                        Il y a quelques instants
+                                    </time>
+                                </div>
+                            </div>
+                        </a>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <p class="no-news">Aucune activité récente pour le moment.</p>
         <?php endif; ?>
     </div>
 </section>

@@ -175,7 +175,32 @@ function timeAgo($datetime)
                             </div>
                         <?php endif; ?>
                     </div>
-                <?php elseif (!$isLoggedIn && $isActive): ?>
+                <?php elseif (!$hasStarted && $isLoggedIn && $currentUserId !== (int)$auction['seller_id']): ?>
+                    <div class="bid-section">
+                        <h3>Faire une enchère</h3>
+                        <div class="upcoming-notice">
+                            <?php
+                            $timeRemaining = $startDate->getTimestamp() - $now->getTimestamp();
+                            $days = floor($timeRemaining / 86400);
+                            $hours = floor(($timeRemaining % 86400) / 3600);
+                            $minutes = floor(($timeRemaining % 3600) / 60);
+                            $seconds = $timeRemaining % 60;
+
+                            $timeString = '';
+                            if ($days > 0) {
+                                $timeString = "{$days}j {$hours}h {$minutes}m";
+                            } elseif ($hours > 0) {
+                                $timeString = "{$hours}h {$minutes}m {$seconds}s";
+                            } elseif ($minutes > 0) {
+                                $timeString = "{$minutes}m {$seconds}s";
+                            } else {
+                                $timeString = "{$seconds}s";
+                            }
+                            ?>
+                            <p>Désolé cette enchère n'est pas encore active vous ne pouvez donc pas Miser avant <?= $timeString ?></p>
+                        </div>
+                    </div>
+                <?php elseif (!$isLoggedIn && !$hasEnded): ?>
                     <div class="bid-section">
                         <div class="login-prompt">
                             <p>Connectez-vous pour participer à cette enchère.</p>

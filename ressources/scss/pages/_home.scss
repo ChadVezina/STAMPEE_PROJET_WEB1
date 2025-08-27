@@ -235,6 +235,33 @@
             font-size: 1.1rem;
             margin: 0 0 0.5rem;
             color: vars.$color-text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+
+            .status-badge {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.5rem;
+                border-radius: 0.5rem;
+                font-weight: 600;
+                text-transform: uppercase;
+
+                &--upcoming {
+                    background-color: #fff3cd;
+                    color: #856404;
+                }
+
+                &--active {
+                    background-color: #d4edda;
+                    color: #155724;
+                }
+
+                &--ended {
+                    background-color: #f8d7da;
+                    color: #721c24;
+                }
+            }
         }
 
         .card__price {
@@ -372,5 +399,23 @@
             color: vars.$color-muted;
             font-style: italic;
         }
+    }
+
+    .news-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+
+        @media (max-width: vars.$bp-md) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .no-news {
+        text-align: center;
+        color: vars.$color-muted;
+        font-style: italic;
+        padding: 2rem;
     }
 }

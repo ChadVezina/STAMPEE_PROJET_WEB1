@@ -186,7 +186,7 @@ final class AuctionService
 
         $count = $pdo->query("
             SELECT COUNT(*) FROM `Auction`
-            WHERE NOW() BETWEEN auction_start AND auction_end
+            WHERE auction_end > NOW()
         ")->fetchColumn();
         $total = (int)$count;
         $pages = max(1, (int)ceil($total / $perPage));
@@ -198,7 +198,7 @@ final class AuctionService
                    (SELECT MAX(b.price) FROM `Bid` b WHERE b.auction_id = a.id) AS current_price
             FROM `Auction` a
             JOIN `Stamp` s ON s.id = a.stamp_id
-            WHERE NOW() BETWEEN a.auction_start AND a.auction_end
+            WHERE a.auction_end > NOW()
             ORDER BY a.auction_end ASC
             LIMIT :lim OFFSET :off
         ");

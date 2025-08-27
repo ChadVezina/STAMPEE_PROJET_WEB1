@@ -7,7 +7,7 @@ $base = \App\Core\Config::get('app.base_url');
 ?>
 <section class="auctions">
   <header class="auctions__header">
-    <h1 class="auctions__title">Enchères en cours</h1>
+    <h1 class="auctions__title">Toutes les enchères</h1>
 
     <div class="auctions__tools">
       <form class="auctions__search" action="<?= $base ?>/auctions" method="get">
@@ -25,10 +25,23 @@ $base = \App\Core\Config::get('app.base_url');
   <div class="grid grid--cards grid--with-aside">
     <div class="grid__main">
       <?php foreach ($auctions as $a): ?>
+        <?php
+        $isUpcoming = strtotime($a['auction_start']) > time();
+        $isActive = strtotime($a['auction_start']) <= time() && strtotime($a['auction_end']) > time();
+        ?>
         <article class="card card--auction">
-          <a class="card__link" href="<?= $base ?>/stamps/show?id=<?= (int)$a['stamp_id'] ?>">
+          <a class="card__link" href="<?= $base ?>/auctions/show?id=<?= (int)$a['id'] ?>">
             <div class="card__image" style="background-image:url('<?= htmlspecialchars($a['main_image'] ?? '', ENT_QUOTES) ?>');"></div>
-            <h3 class="card__title"><?= htmlspecialchars($a['stamp_name'] ?? 'Timbre') ?></h3>
+            <h3 class="card__title">
+              <?= htmlspecialchars($a['stamp_name'] ?? 'Timbre') ?>
+              <?php if ($isUpcoming): ?>
+                <span class="status-badge status-badge--upcoming">À venir</span>
+              <?php elseif ($isActive): ?>
+                <span class="status-badge status-badge--active">En cours</span>
+              <?php else: ?>
+                <span class="status-badge status-badge--ended">Terminée</span>
+              <?php endif; ?>
+            </h3>
             <p class="card__price">
               <?= isset($a['current_price']) && $a['current_price'] ? number_format((float)$a['current_price'], 2) . ' $ CAD' : number_format((float)$a['min_price'], 2) . ' $ CAD' ?>
             </p>

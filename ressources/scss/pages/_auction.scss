@@ -191,16 +191,17 @@
     color: $color-gray;
 }
 
-.auction-countdown {
-    background-color: $color-bg;
+.upcoming-notice {
+    background-color: $color-warning-light;
     border: 1px solid $color-border;
     border-radius: 8px;
     padding: 1.5rem;
-    margin-bottom: 2rem;
+    text-align: center;
+    color: $color-warning-text;
 
-    h3 {
-        margin-bottom: 1rem;
-        color: $color-text;
+    p {
+        margin: 0;
+        font-weight: 500;
     }
 }
 
