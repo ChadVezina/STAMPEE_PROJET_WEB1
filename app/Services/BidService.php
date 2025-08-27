@@ -97,7 +97,7 @@ final class BidService
             $required = $threshold + 0.01;
             return [
                 'success' => false,
-                'errors' => ["Votre offre doit \":' être supérieure à " . number_format($required, 2) . " $ CAD."],
+                'errors' => ["Votre offre doit être supérieure à " . number_format($required, 2) . " $ CAD."],
                 'bid_id' => null
             ];
         }
@@ -228,6 +228,14 @@ final class BidService
     }
 
     /**
+     * Validation uniquement d'une offre (sans la placer)
+     */
+    public function validateBidOnly(int $auctionId, int $userId, float $price): array
+    {
+        return $this->validateBid($auctionId, $userId, $price);
+    }
+
+    /**
      * Récupère l'historique des offres pour un utilisateur
      */
     public function getUserBidHistory(int $userId, int $limit = 20): array
@@ -323,14 +331,14 @@ final class BidService
 
         $minPrice = (float)$auction['min_price'];
         if ($price < $minPrice) {
-            $errors[] = "L'offre doit \":' être d'au moins " . number_format($minPrice, 2) . " $ CAD.";
+            $errors[] = "L'offre doit être d'au moins " . number_format($minPrice, 2) . " $ CAD.";
         }
 
         // Vérifier par rapport aux autres offres
         $currentHighest = $this->getCurrentThreshold($auctionId);
         if ($price <= $currentHighest) {
             $required = $currentHighest + 0.01;
-            $errors[] = "Votre offre doit \":' être supérieure à " . number_format($required, 2) . " $ CAD.";
+            $errors[] = "Votre offre doit être supérieure à " . number_format($required, 2) . " $ CAD.";
         }
 
         return $errors;

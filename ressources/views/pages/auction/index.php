@@ -22,50 +22,93 @@ $base = \App\Core\Config::get('app.base_url');
     </div>
   </header>
 
-  <div class="grid grid--cards grid--with-aside">
-    <div class="grid__main">
+  <div class="auctions-grid">
+    <?php if (!empty($auctions)): ?>
       <?php foreach ($auctions as $a): ?>
         <?php
         $isUpcoming = strtotime($a['auction_start']) > time();
         $isActive = strtotime($a['auction_start']) <= time() && strtotime($a['auction_end']) > time();
         ?>
-        <article class="card card--auction">
-          <a class="card__link" href="<?= $base ?>/auctions/show?id=<?= (int)$a['id'] ?>">
-            <div class="card__image" style="background-image:url('<?= htmlspecialchars($a['main_image'] ?? '', ENT_QUOTES) ?>');"></div>
-            <h3 class="card__title">
-              <?= htmlspecialchars($a['stamp_name'] ?? 'Timbre') ?>
+        <article class="auction-card">
+          <a class="auction-card__link" href="<?= $base ?>/auctions/show?id=<?= (int)$a['id'] ?>">
+            <div class="auction-card__image" style="background-image:url('<?= htmlspecialchars($a['main_image'] ?? '', ENT_QUOTES) ?>');">
               <?php if ($isUpcoming): ?>
-                <span class="status-badge status-badge--upcoming">À venir</span>
+                <span class="auction-card__badge auction-card__badge--upcoming">À venir</span>
               <?php elseif ($isActive): ?>
-                <span class="status-badge status-badge--active">En cours</span>
+                <span class="auction-card__badge auction-card__badge--active">En cours</span>
               <?php else: ?>
-                <span class="status-badge status-badge--ended">Terminée</span>
+                <span class="auction-card__badge auction-card__badge--ended">Terminée</span>
               <?php endif; ?>
-            </h3>
-            <p class="card__price">
-              <?= isset($a['current_price']) && $a['current_price'] ? number_format((float)$a['current_price'], 2) . ' $ CAD' : number_format((float)$a['min_price'], 2) . ' $ CAD' ?>
-            </p>
-            <?php if (!empty($a['auction_end'])): ?>
-              <div class="card__time-remaining" data-end-time="<?= date('c', strtotime($a['auction_end'])) ?>">
-                <span class="card__countdown">Calcul en cours...</span>
+            </div>
+            <div class="auction-card__content">
+              <h3 class="auction-card__title"><?= htmlspecialchars($a['stamp_name'] ?? 'Timbre') ?></h3>
+              <div class="auction-card__price">
+                <?= isset($a['current_price']) && $a['current_price'] ? number_format((float)$a['current_price'], 2) . ' $ CAD' : number_format((float)$a['min_price'], 2) . ' $ CAD' ?>
               </div>
-            <?php endif; ?>
+              <?php if (!empty($a['auction_end'])): ?>
+                <div class="auction-card__countdown" data-end-time="<?= date('c', strtotime($a['auction_end'])) ?>">
+                  <span class="countdown-text">Calcul en cours...</span>
+                </div>
+              <?php endif; ?>
+            </div>
           </a>
         </article>
       <?php endforeach; ?>
-    </div>
+    <?php else: ?>
+      <div class="no-auctions">
+        <p>Aucune enchère disponible pour le moment.</p>
+      </div>
+    <?php endif; ?>
   </div>
 
   <?php if ($pages > 1): ?>
-    <nav class="pagination" aria-label="Pagination">
-      <span class="pagination__info">Page&nbsp;: <?= $page ?> / <?= $pages ?></span>
-      <ul class="pagination__list">
-        <?php for ($i = 1; $i <= $pages; $i++): ?>
-          <li class="pagination__item">
-            <a class="pagination__link<?= $i === $page ? ' pagination__link--active' : '' ?>" href="<?= $base ?>/auctions?page=<?= $i ?>"><?= $i ?></a>
-          </li>
-        <?php endfor; ?>
-      </ul>
+    <nav class="pagination" aria-label="Pagination des enchères">
+      <div class="pagination__info">
+        Page <?= $page ?> sur <?= $pages ?> (<?= $total ?> enchères au total)
+      </div>
+
+      <div class="pagination__controls">
+        <?php if ($page > 1): ?>
+          <a href="<?= $base ?>/auctions?page=<?= $page - 1 ?>" class="pagination__nav pagination__nav--prev" aria-label="Page précédente">
+            ‹ Précédent
+          </a>
+        <?php endif; ?>
+
+        <div class="pagination__numbers">
+          <?php
+          $start = max(1, $page - 2);
+          $end = min($pages, $page + 2);
+
+          if ($start > 1): ?>
+            <a href="<?= $base ?>/auctions?page=1" class="pagination__link">1</a>
+            <?php if ($start > 2): ?>
+              <span class="pagination__ellipsis">...</span>
+            <?php endif; ?>
+          <?php endif; ?>
+
+          <?php for ($i = $start; $i <= $end; $i++): ?>
+            <a href="<?= $base ?>/auctions?page=<?= $i ?>"
+              class="pagination__link<?= $i === $page ? ' pagination__link--active' : '' ?>"
+              aria-label="Page <?= $i ?>"
+              aria-current="<?= $i === $page ? 'page' : null ?>">
+              <?= $i ?>
+            </a>
+          <?php endfor; ?>
+
+          <?php if ($end < $pages): ?>
+            <?php if ($end < $pages - 1): ?>
+              <span class="pagination__ellipsis">...</span>
+            <?php endif; ?>
+            <a href="<?= $base ?>/auctions?page=<?= $pages ?>" class="pagination__link"><?= $pages ?></a>
+          <?php endif; ?>
+        </div>
+
+        <?php if ($page < $pages): ?>
+          <a href="<?= $base ?>/auctions?page=<?= $page + 1 ?>" class="pagination__nav pagination__nav--next" aria-label="Page suivante">
+            Suivant ›
+          </a>
+        <?php endif; ?>
+      </div>
     </nav>
   <?php endif; ?>
 
@@ -77,19 +120,16 @@ $base = \App\Core\Config::get('app.base_url');
 <script>
   // Countdown Timer Functionality for Auction Cards
   function updateCountdowns() {
-    const countdownElements = document.querySelectorAll('.card__countdown');
+    const countdownElements = document.querySelectorAll('.auction-card__countdown');
 
     countdownElements.forEach(element => {
-      const timeRemaining = element.closest('.card__time-remaining');
-      if (!timeRemaining) return;
-
-      const endTime = new Date(timeRemaining.getAttribute('data-end-time')).getTime();
+      const endTime = new Date(element.getAttribute('data-end-time')).getTime();
       const now = new Date().getTime();
       const distance = endTime - now;
 
       if (distance < 0) {
-        element.innerHTML = "Enchère terminée";
-        element.classList.add('urgent');
+        element.innerHTML = '<span class="countdown-text">Terminée</span>';
+        element.classList.add('expired');
         return;
       }
 
@@ -107,21 +147,15 @@ $base = \App\Core\Config::get('app.base_url');
         timeString = `${minutes}m ${seconds}s`;
       } else {
         timeString = `${seconds}s`;
-        element.classList.add('urgent');
       }
 
-      // Add urgent class when less than 1 hour remains
-      if (distance < 3600000) { // 1 hour in milliseconds
-        element.classList.add('urgent');
-      }
-
-      element.innerHTML = timeString;
+      element.innerHTML = `<span class="countdown-text">${timeString}</span>`;
     });
   }
 
   // Start countdown if there are auction cards
   document.addEventListener('DOMContentLoaded', function() {
-    if (document.querySelector('.card__countdown')) {
+    if (document.querySelector('.auction-card__countdown')) {
       updateCountdowns(); // Initial update
       setInterval(updateCountdowns, 1000); // Update every second
     }

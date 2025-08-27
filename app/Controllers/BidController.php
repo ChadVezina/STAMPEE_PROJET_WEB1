@@ -236,8 +236,8 @@ final class BidController
         $userId = (int)$_SESSION['user']['id'];
         $bidService = new BidService();
 
-        // Utiliser la validation du modèle Bid
-        $errors = \App\Models\Bid::validateBid($auctionId, $userId, $price);
+        // Utiliser la méthode privée validateBid via une nouvelle méthode publique
+        $errors = $bidService->validateBidOnly($auctionId, $userId, $price);
 
         header('Content-Type: application/json');
         echo json_encode([

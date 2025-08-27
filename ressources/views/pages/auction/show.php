@@ -141,7 +141,7 @@ function timeAgo($datetime)
                         <?php endif; ?>
 
                         <?php if ($user_can_bid): ?>
-                            <form id="bid-form" class="bid-form" action="<?= $base ?>/bid/ajax-store" method="POST" data-auction-id="<?= $auction['id'] ?>">
+                            <form id="bid-form" class="bid-form" action="<?= $base ?>/bid/store" method="POST" data-auction-id="<?= $auction['id'] ?>">
                                 <input type="hidden" name="_token" value="<?= \App\Core\CsrfToken::token() ?>">
                                 <input type="hidden" name="auction_id" value="<?= $auction['id'] ?>">
 

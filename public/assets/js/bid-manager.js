@@ -24,11 +24,11 @@ class BidManager {
     init() {
         if (!this.bidForm) return;
 
-        // Validation en temps réel du montant
-        if (this.priceInput) {
-            this.priceInput.addEventListener("input", this.debounce(this.validatePrice.bind(this), 500));
-            this.priceInput.addEventListener("blur", this.validatePrice.bind(this));
-        }
+        // Disable real-time validation temporarily to debug main submission
+        // if (this.priceInput) {
+        //     this.priceInput.addEventListener("input", this.debounce(this.validatePrice.bind(this), 500));
+        //     this.priceInput.addEventListener("blur", this.validatePrice.bind(this));
+        // }
 
         // Soumission du formulaire en AJAX
         if (this.bidForm) {
@@ -62,6 +62,15 @@ class BidManager {
                 body: `auction_id=${this.auctionId}&price=${price}`,
             });
 
+            // Check if response is JSON
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                console.error("Non-JSON response received:", response.status, response.statusText);
+                this.showError("Erreur de communication avec le serveur.");
+                this.setSubmitButtonState(false);
+                return;
+            }
+
             const data = await response.json();
 
             if (data.valid) {
@@ -91,9 +100,22 @@ class BidManager {
 
         const formData = new FormData(this.bidForm);
 
+        // Debug: log form data
+        console.log("Submitting bid with data:");
+        for (let [key, value] of formData.entries()) {
+            console.log(key, value);
+        }
+
         try {
-            const baseUrl = window.location.origin + window.location.pathname.split("/").slice(0, -2).join("/");
-            const response = await fetch(`${baseUrl}/bid/ajax-store`, {
+            // Construct the proper base URL for the application
+            const currentUrl = window.location.pathname;
+            // Extract base path: /Stampee/auctions/show -> /Stampee
+            const basePath = currentUrl.split("/").slice(0, 2).join("/");
+            const baseUrl = window.location.origin + basePath;
+            const submitUrl = `${baseUrl}/bid/ajax-store`;
+            console.log("Submitting to URL:", submitUrl);
+
+            const response = await fetch(submitUrl, {
                 method: "POST",
                 headers: {
                     "X-Requested-With": "XMLHttpRequest",
@@ -101,7 +123,22 @@ class BidManager {
                 body: formData,
             });
 
+            console.log("Response status:", response.status);
+            console.log("Response headers:", response.headers);
+
+            // Check if response is JSON
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                console.error("Non-JSON response received:", response.status, response.statusText);
+                const textResponse = await response.text();
+                console.error("Response body:", textResponse);
+                this.showError("Erreur de communication avec le serveur.");
+                this.setSubmitButtonState(true);
+                return;
+            }
+
             const result = await response.json();
+            console.log("Response data:", result);
 
             if (result.success) {
                 // Mettre à jour l'interface avec les nouvelles données
