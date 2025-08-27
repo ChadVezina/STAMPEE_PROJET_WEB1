@@ -165,18 +165,25 @@ final class AuctionController
 
     public function publicIndex(array $data = []): void
     {
-        $page    = max(1, (int)($data['page'] ?? 1));
-        $perPage = 9;
-
-        $srv  = new AuctionService();
-        $resp = $srv->getActivePaginated($page, $perPage);
+        $srv = new AuctionService();
+        $allAuctions = $srv->getAllWithMeta();
 
         View::render('pages/auction/index', [
-            'auctions'  => $resp['items'],
-            'page'      => $resp['page'],
-            'pages'     => $resp['pages'],
-            'total'     => $resp['total'],
-            'perPage'   => $perPage,
+            'auctions' => $allAuctions,
         ]);
+    }
+
+    public function getAllAuctionsJson(): void
+    {
+        header('Content-Type: application/json');
+
+        $srv = new AuctionService();
+        $allAuctions = $srv->getAllWithMeta();
+
+        echo json_encode([
+            'success' => true,
+            'auctions' => $allAuctions
+        ]);
+        exit;
     }
 }

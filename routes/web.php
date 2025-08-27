@@ -33,6 +33,7 @@ Route::post('/dashboard/delete', [DashboardController::class, 'deleteAccount']);
 
 // Enchères publiques et gestion des enchères
 Route::get('/auctions', [AuctionController::class, 'publicIndex']); // Public auctions list
+Route::get('/auctions/api/all', [AuctionController::class, 'getAllAuctionsJson']); // Get all auctions as JSON
 Route::get('/auctions/show', [AuctionController::class, 'show']);
 Route::get('/auctions/create', [AuctionController::class, 'create']);
 Route::post('/auctions/store', [AuctionController::class, 'store']);

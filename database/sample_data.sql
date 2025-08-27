@@ -12,13 +12,13 @@ INSERT INTO `Stamp` (`name`, `created_at`, `country_code`, `width_mm`, `height_m
 -- Sample stamp images (you would need to upload actual images)
 -- These are placeholder URLs - replace with actual uploaded image paths
 INSERT INTO `StampImage` (`stamp_id`, `url`, `is_main`) VALUES
-(1, '/public/uploads/stamps/stamp_1_main.jpg', TRUE),
-(1, '/public/uploads/stamps/stamp_1_detail.jpg', FALSE),
-(2, '/public/uploads/stamps/stamp_2_main.jpg', TRUE),
-(3, '/public/uploads/stamps/stamp_3_main.jpg', TRUE),
-(3, '/public/uploads/stamps/stamp_3_back.jpg', FALSE),
-(4, '/public/uploads/stamps/stamp_4_main.jpg', TRUE),
-(5, '/public/uploads/stamps/stamp_5_main.jpg', TRUE);
+(1, '/uploads/stamps/stamp_1_main.jpg', TRUE),
+(1, '/uploads/stamps/stamp_1_detail.jpg', FALSE),
+(2, '/uploads/stamps/stamp_2_main.jpg', TRUE),
+(3, '/uploads/stamps/stamp_3_main.jpg', TRUE),
+(3, '/uploads/stamps/stamp_3_back.jpg', FALSE),
+(4, '/uploads/stamps/stamp_4_main.jpg', TRUE),
+(5, '/uploads/stamps/stamp_5_main.jpg', TRUE);
 
 -- Sample auctions (assuming you have users with IDs 1, 2, 3)
 -- You'll need to adjust seller_id values based on your actual user data

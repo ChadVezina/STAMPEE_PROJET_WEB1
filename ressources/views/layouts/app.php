@@ -151,6 +151,12 @@ if ($requestPath === '' || $requestPath === '/' || $requestPath === $basePathNor
     </script>
   <?php endif; ?>
 
+  <?php
+  // Include auction filter on auction pages
+  if (strpos($currentPage, '/auctions') !== false && strpos($currentPage, '/show') === false): ?>
+    <script src="<?= htmlspecialchars($baseUrl) ?>/assets/js/auction-filter.js" defer></script>
+  <?php endif; ?>
+
   <!-- Profile dropdown functionality -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {

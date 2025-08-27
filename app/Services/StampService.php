@@ -321,7 +321,7 @@ final class StampService
     private function handleImageUploads(int $stampId, array $files): bool
     {
         $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/public/uploads/stamps/';
-        $webPath = '/public/uploads/stamps/';
+        $webPath = '/uploads/stamps/';
 
         // Create upload directory if it doesn't exist
         if (!is_dir($uploadDir)) {

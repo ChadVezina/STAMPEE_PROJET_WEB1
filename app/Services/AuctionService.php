@@ -17,6 +17,7 @@ final class AuctionService
             SELECT a.*,
                    s.name AS stamp_name,
                    u.nom  AS seller_name,
+                   (SELECT url FROM `StampImage` si WHERE si.stamp_id = s.id AND si.is_main=1 LIMIT 1) AS main_image,
                    (SELECT MAX(b.price) FROM `Bid` b WHERE b.auction_id = a.id) AS current_price,
                    (
                      a.favorite = 1
@@ -194,10 +195,12 @@ final class AuctionService
         $stmt = $pdo->prepare("
             SELECT a.*,
                    s.name AS stamp_name,
+                   u.nom AS seller_name,
                    (SELECT url FROM `StampImage` si WHERE si.stamp_id = s.id AND si.is_main=1 LIMIT 1) AS main_image,
                    (SELECT MAX(b.price) FROM `Bid` b WHERE b.auction_id = a.id) AS current_price
             FROM `Auction` a
             JOIN `Stamp` s ON s.id = a.stamp_id
+            JOIN `User` u ON u.id = a.seller_id
             WHERE a.auction_end > NOW()
             ORDER BY a.auction_end ASC
             LIMIT :lim OFFSET :off
@@ -209,6 +212,141 @@ final class AuctionService
         return [
             'items' => $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [],
             'page'  => $page,
+            'pages' => $pages,
+            'total' => $total,
+        ];
+    }
+
+    public function getFilteredPaginated(int $page, int $perPage = 9, array $filters = []): array
+    {
+        $page = max(1, $page);
+        $offset = ($page - 1) * $perPage;
+        $pdo = DB::pdo();
+
+        // Build WHERE conditions
+        $whereConditions = [];
+        $params = [];
+        $paramCount = 0;
+
+        // Filter by search query (stamp name)
+        if (!empty($filters['search'])) {
+            $whereConditions[] = "s.name LIKE :search";
+            $params[':search'] = '%' . $filters['search'] . '%';
+        }
+
+        // Filter by seller name
+        if (!empty($filters['seller'])) {
+            $whereConditions[] = "u.nom LIKE :seller";
+            $params[':seller'] = '%' . $filters['seller'] . '%';
+        }
+
+        // Filter by price range
+        if (isset($filters['min_price']) && $filters['min_price'] !== null) {
+            $whereConditions[] = "(COALESCE((SELECT MAX(b.price) FROM `Bid` b WHERE b.auction_id = a.id), a.min_price) >= :min_price)";
+            $params[':min_price'] = $filters['min_price'];
+        }
+
+        if (isset($filters['max_price']) && $filters['max_price'] !== null) {
+            $whereConditions[] = "(COALESCE((SELECT MAX(b.price) FROM `Bid` b WHERE b.auction_id = a.id), a.min_price) <= :max_price)";
+            $params[':max_price'] = $filters['max_price'];
+        }
+
+        // Filter by auction status
+        $now = date('Y-m-d H:i:s');
+        switch ($filters['status'] ?? '') {
+            case 'active':
+                $whereConditions[] = "a.auction_start <= :now1 AND a.auction_end > :now2";
+                $params[':now1'] = $now;
+                $params[':now2'] = $now;
+                break;
+            case 'upcoming':
+                $whereConditions[] = "a.auction_start > :now3";
+                $params[':now3'] = $now;
+                break;
+            case 'ended':
+                $whereConditions[] = "a.auction_end <= :now4";
+                $params[':now4'] = $now;
+                break;
+            default:
+                // No status filter, show all
+                break;
+        }
+
+        // Build ORDER BY clause
+        $orderBy = "a.auction_end ASC"; // default
+        switch ($filters['sort_by'] ?? '') {
+            case 'end_time_asc':
+                $orderBy = "a.auction_end ASC";
+                break;
+            case 'end_time_desc':
+                $orderBy = "a.auction_end DESC";
+                break;
+            case 'price_asc':
+                $orderBy = "current_price ASC";
+                break;
+            case 'price_desc':
+                $orderBy = "current_price DESC";
+                break;
+            case 'title_asc':
+                $orderBy = "s.name ASC";
+                break;
+            case 'title_desc':
+                $orderBy = "s.name DESC";
+                break;
+            case 'seller_asc':
+                $orderBy = "u.nom ASC";
+                break;
+            case 'seller_desc':
+                $orderBy = "u.nom DESC";
+                break;
+        }
+
+        // Build the WHERE clause
+        $whereClause = '';
+        if (!empty($whereConditions)) {
+            $whereClause = 'WHERE ' . implode(' AND ', $whereConditions);
+        }
+
+        // Count total results
+        $countSql = "
+            SELECT COUNT(*) 
+            FROM `Auction` a
+            JOIN `Stamp` s ON s.id = a.stamp_id
+            JOIN `User` u ON u.id = a.seller_id
+            $whereClause
+        ";
+
+        $countStmt = $pdo->prepare($countSql);
+        $countStmt->execute($params);
+        $total = (int)$countStmt->fetchColumn();
+        $pages = max(1, (int)ceil($total / $perPage));
+
+        // Get paginated results
+        $sql = "
+            SELECT a.*,
+                   s.name AS stamp_name,
+                   u.nom AS seller_name,
+                   (SELECT url FROM `StampImage` si WHERE si.stamp_id = s.id AND si.is_main=1 LIMIT 1) AS main_image,
+                   (SELECT MAX(b.price) FROM `Bid` b WHERE b.auction_id = a.id) AS current_price
+            FROM `Auction` a
+            JOIN `Stamp` s ON s.id = a.stamp_id
+            JOIN `User` u ON u.id = a.seller_id
+            $whereClause
+            ORDER BY $orderBy
+            LIMIT :lim OFFSET :off
+        ";
+
+        $stmt = $pdo->prepare($sql);
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
+        $stmt->bindValue(':lim', $perPage, PDO::PARAM_INT);
+        $stmt->bindValue(':off', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return [
+            'items' => $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [],
+            'page' => $page,
             'pages' => $pages,
             'total' => $total,
         ];
