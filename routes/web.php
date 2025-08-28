@@ -7,6 +7,7 @@ use App\Controllers\AuctionController;
 use App\Controllers\StampController;
 use App\Controllers\BidController;
 use App\Controllers\DashboardController;
+use App\Controllers\FavoriteController;
 
 // Pages publiques (authentification)
 Route::get('/login', [AuthController::class, 'showLogin']);
@@ -18,6 +19,14 @@ Route::get('/logout', [AuthController::class, 'logout']);
 // Pages publiques
 Route::get('/', [PublicController::class, 'home']);
 Route::get('/home', [PublicController::class, 'home']); // Alias for navigation consistency
+
+// Lord Interface - Gestion des Coups de Cœur
+Route::get('/lord/login', [FavoriteController::class, 'showLogin']);
+Route::post('/lord/login', [FavoriteController::class, 'login']);
+Route::get('/lord/favorites/manage', [FavoriteController::class, 'manage']);
+Route::post('/lord/favorites/toggle', [FavoriteController::class, 'toggleFavorite']);
+Route::get('/lord/logout', [FavoriteController::class, 'logout']);
+Route::get('/api/lord/favorites', [FavoriteController::class, 'getFavoritesApi']);
 
 // Dashboard routes
 Route::get('/dashboard', [DashboardController::class, 'index']); // User dashboard

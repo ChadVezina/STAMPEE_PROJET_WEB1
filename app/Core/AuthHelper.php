@@ -18,6 +18,42 @@ trait AuthHelper
     }
 
     /**
+     * Check if user is logged in (without redirect)
+     */
+    public static function isLoggedIn(): bool
+    {
+        return !empty($_SESSION['user']);
+    }
+
+    /**
+     * Check if logged in user is super admin
+     */
+    public static function isSuperAdmin(): bool
+    {
+        return !empty($_SESSION['user']) &&
+            isset($_SESSION['user']['role']) &&
+            $_SESSION['user']['role'] === 'super_admin';
+    }
+
+    /**
+     * Check if logged in user is admin or super admin
+     */
+    public static function isAdmin(): bool
+    {
+        return !empty($_SESSION['user']) &&
+            isset($_SESSION['user']['role']) &&
+            in_array($_SESSION['user']['role'], ['admin', 'super_admin']);
+    }
+
+    /**
+     * Get current user data
+     */
+    public static function getCurrentUser(): ?array
+    {
+        return $_SESSION['user'] ?? null;
+    }
+
+    /**
      * Set error message and redirect
      */
     protected function redirectWithError(string $message, string $path): void

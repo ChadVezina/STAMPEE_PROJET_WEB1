@@ -367,4 +367,34 @@ final class AuctionService
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ?: null;
     }
+
+    /**
+     * Get all favorite auctions (marked as favorite = 1)
+     */
+    public static function getFavoriteAuctions(): array
+    {
+        $sql = "
+            SELECT a.*,
+                   s.name AS stamp_name,
+                   u.nom AS seller_name,
+                   (SELECT url FROM `StampImage` si WHERE si.stamp_id = s.id AND si.is_main=1 LIMIT 1) AS main_image,
+                   (SELECT MAX(b.price) FROM `Bid` b WHERE b.auction_id = a.id) AS current_price
+            FROM `Auction` a
+            JOIN `Stamp` s ON s.id = a.stamp_id
+            JOIN `User` u ON u.id = a.seller_id
+            WHERE a.favorite = 1
+            ORDER BY a.auction_start DESC
+        ";
+        $stmt = DB::pdo()->query($sql);
+        return $stmt ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];
+    }
+
+    /**
+     * Update favorite status of an auction
+     */
+    public static function updateFavoriteStatus(int $auctionId, bool $isFavorite): bool
+    {
+        $stmt = DB::pdo()->prepare("UPDATE `Auction` SET favorite = ? WHERE id = ?");
+        return $stmt->execute([$isFavorite ? 1 : 0, $auctionId]);
+    }
 }

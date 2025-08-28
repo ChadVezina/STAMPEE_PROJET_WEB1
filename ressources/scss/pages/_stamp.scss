@@ -229,7 +229,7 @@
 
 /* Modern Stamp Showcase Styles */
 .stamp-showcase {
-    background: linear-gradient(180deg, $color-neutral-bg 0%, $color-bg 100%);
+    background: $color-neutral-bg;
     min-height: 100vh;
     padding-bottom: 2rem;
     color: $color-text-dark;
@@ -325,7 +325,7 @@
     justify-content: center;
     height: 100%;
     color: $color-gray;
-    background: linear-gradient(45deg, $color-neutral-bg, $color-border-light);
+    background: $color-neutral-bg;
 }
 
 .placeholder-icon {
@@ -411,7 +411,7 @@
     justify-content: center;
 
     &--primary {
-        background: linear-gradient(135deg, $color-blue, $color-blue-hover);
+        background: $color-blue;
         color: $color-bg;
         box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
 
@@ -422,7 +422,7 @@
     }
 
     &--secondary {
-        background: linear-gradient(135deg, $color-gray, $color-text-light);
+        background: $color-gray;
         color: $color-bg;
         box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
 
@@ -820,7 +820,7 @@
     padding: 1.25rem;
     text-align: center;
     transition: all 0.18s ease;
-    background: linear-gradient(180deg, rgba($color-bg, 0.02), rgba($color-neutral-bg, 0.02));
+    background: $color-neutral-bg;
     min-height: 140px;
     display: flex;
     align-items: center;
@@ -876,7 +876,7 @@
 
     &.drag-over {
         border-color: $color-blue;
-        background: linear-gradient(180deg, rgba($color-blue, 0.03), rgba($color-neutral-bg, 0.02));
+        background: $color-blue-light;
     }
 }
 

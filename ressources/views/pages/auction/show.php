@@ -334,6 +334,6 @@ function timeAgo($datetime)
             setInterval(updateCountdown, 1000);
         }
 
-        console.log('🎯 Système d\'enchères chargé pour l\'enchère ID:', document.querySelector('[data-auction-id]')?.dataset.auctionId);
+        // Bid system loaded
     });
 </script>

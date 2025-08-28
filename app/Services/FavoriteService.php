@@ -19,12 +19,17 @@ final class FavoriteService
         $sql = "
             SELECT a.*,
                    s.name AS stamp_name,
+                   s.country_code,
                    u.nom  AS seller_name,
+                   c.name_fr AS country_name,
+                   si.url AS main_image,
                    (SELECT MAX(b.price) FROM `Bid` b WHERE b.auction_id = a.id) AS current_price
             FROM `Favorite` f
             JOIN `Auction` a ON a.id = f.auction_id
             JOIN `Stamp`   s ON s.id = a.stamp_id
             JOIN `User`    u ON u.id = a.seller_id
+            LEFT JOIN `Country` c ON c.iso2 = s.country_code
+            LEFT JOIN `StampImage` si ON si.stamp_id = s.id AND si.is_main = 1
             ORDER BY f.favorite_at DESC, a.auction_start DESC
             LIMIT :lim
         ";

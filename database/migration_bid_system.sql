@@ -147,7 +147,7 @@ BEGIN
         
         IF p_price < v_min_required THEN
             SET p_success = FALSE;
-            SET p_message = CONCAT('Offre insuffisante. Minimum requis: ', v_min_required, ' €');
+            SET p_message = CONCAT('Offre insuffisante. Minimum requis: ', v_min_required, ' $ CAD');
             ROLLBACK;
         ELSE
             -- Désactiver les offres précédentes de cet utilisateur sur cette enchère

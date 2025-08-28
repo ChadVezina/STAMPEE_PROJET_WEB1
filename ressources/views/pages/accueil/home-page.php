@@ -26,29 +26,47 @@ $base = \App\Core\Config::get('app.base_url');
 <!-- COUP DE COEUR (full width, 3 card carousel) -->
 <section class="coup-de-coeur">
     <div class="section__container">
-        <h2 class="section__title">Coup de Cœur du Lord</h2>
-        <p class="section__subtitle">Sélection exclusive de timbres d'exception</p>
+        <h2 class="section__title">Coups de Cœur du Lord</h2>
+        <p class="section__subtitle">Sélection exclusive de timbres et enchères d'exception</p>
 
         <div class="carousel" role="region" aria-label="Carrousel des coups de cœur">
             <button class="carousel__ctrl carousel__ctrl--prev" aria-label="Précédent">◀</button>
             <div class="carousel__track">
-                <?php foreach (array_slice($featured, 0, 3) as $item): ?>
+                <?php foreach (array_slice($featured, 0, 6) as $item): ?>
                     <article class="carousel__item card card--featured">
-                        <a class="card__link" href="<?= $base ?>/stamp/show?id=<?= (int)$item['stamp_id'] ?>">
-                            <div class="card__image" style="background-image:url('<?= htmlspecialchars($item['main_image'] ?? '', ENT_QUOTES) ?>');"></div>
-                            <div class="card__content">
-                                <h3 class="card__title"><?= htmlspecialchars($item['stamp_name'] ?? 'Timbre') ?></h3>
-                                <p class="card__price">
-                                    <?= isset($item['current_price']) && $item['current_price'] ? number_format((float)$item['current_price'], 2) . ' $ CAD' : number_format((float)$item['min_price'], 2) . ' $ CAD' ?>
-                                </p>
-                                <?php if (!empty($item['auction_end'])): ?>
-                                    <div class="card__time-remaining" data-end-time="<?= date('c', strtotime($item['auction_end'])) ?>">
-                                        <span class="card__countdown">Calcul en cours...</span>
-                                    </div>
-                                <?php endif; ?>
-                                <span class="card__badge">Coup de Cœur</span>
-                            </div>
-                        </a>
+                        <?php if (isset($item['type']) && $item['type'] === 'stamp_favorite'): ?>
+                            <!-- Stamp Favorite -->
+                            <a class="card__link" href="<?= $base ?>/stamps/public?id=<?= (int)$item['stamp_id'] ?>">
+                                <div class="card__image" style="background-image:url('<?= htmlspecialchars($item['main_image'] ?? '', ENT_QUOTES) ?>');"></div>
+                                <div class="card__content">
+                                    <h3 class="card__title"><?= htmlspecialchars($item['stamp_name'] ?? 'Timbre') ?></h3>
+                                    <p class="card__meta">
+                                        <?= htmlspecialchars($item['country_name'] ?? 'Pays inconnu') ?>
+                                    </p>
+                                    <p class="card__owner">
+                                        Par <?= htmlspecialchars($item['seller_name'] ?? 'Propriétaire') ?>
+                                    </p>
+                                    <span class="card__badge card__badge--stamp">✨ Coup de Cœur</span>
+                                </div>
+                            </a>
+                        <?php else: ?>
+                            <!-- Auction Favorite (existing) -->
+                            <a class="card__link" href="<?= $base ?>/auctions/show?id=<?= (int)$item['id'] ?>">
+                                <div class="card__image" style="background-image:url('<?= htmlspecialchars($item['main_image'] ?? '', ENT_QUOTES) ?>');"></div>
+                                <div class="card__content">
+                                    <h3 class="card__title"><?= htmlspecialchars($item['stamp_name'] ?? 'Timbre') ?></h3>
+                                    <p class="card__price">
+                                        <?= isset($item['current_price']) && $item['current_price'] ? number_format((float)$item['current_price'], 2) . ' $ CAD' : number_format((float)$item['min_price'], 2) . ' $ CAD' ?>
+                                    </p>
+                                    <?php if (!empty($item['auction_end'])): ?>
+                                        <div class="card__time-remaining" data-end-time="<?= date('c', strtotime($item['auction_end'])) ?>">
+                                            <span class="card__countdown">Calcul en cours...</span>
+                                        </div>
+                                    <?php endif; ?>
+                                    <span class="card__badge card__badge--auction">🔥 Enchère Coup de Cœur</span>
+                                </div>
+                            </a>
+                        <?php endif; ?>
                     </article>
                 <?php endforeach; ?>
             </div>
@@ -144,7 +162,136 @@ $base = \App\Core\Config::get('app.base_url');
     </div>
 </section>
 
-<!-- CSS styles moved to ressources/scss/components/_countdown.scss -->
+<!-- Carousel JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Carousel functionality for "Coups de Cœur du Lord"
+        const carousel = document.querySelector('.coup-de-coeur .carousel');
+        if (!carousel) return;
+
+        const track = carousel.querySelector('.carousel__track');
+        const items = carousel.querySelectorAll('.carousel__item');
+        const prevBtn = carousel.querySelector('.carousel__ctrl--prev');
+        const nextBtn = carousel.querySelector('.carousel__ctrl--next');
+
+        if (!track || items.length === 0 || !prevBtn || !nextBtn) return;
+
+        let currentIndex = 0;
+        let autoplayInterval = null; // Properly declare the interval variable
+        const totalItems = items.length;
+        const itemWidth = 350; // Fixed width from CSS
+        const gap = 32; // 2rem gap in pixels
+
+        // Update carousel position and item states
+        function updateCarousel() {
+            // Calculate transform to center the current item
+            const containerWidth = carousel.offsetWidth - 200; // Account for padding
+            const centerOffset = containerWidth / 2 - itemWidth / 2;
+            const translateX = -currentIndex * (itemWidth + gap) + centerOffset;
+            track.style.transform = `translateX(${translateX}px)`;
+
+            // Update item classes and states
+            items.forEach((item, index) => {
+                // Remove all state classes
+                item.classList.remove('carousel__item--active', 'carousel__item--prev', 'carousel__item--next');
+                item.querySelector('.card--featured')?.classList.remove('card--featured-active');
+
+                if (index === currentIndex) {
+                    // Current item - make it active and prominent
+                    item.classList.add('carousel__item--active');
+                    item.querySelector('.card--featured')?.classList.add('card--featured-active');
+                } else if (index === currentIndex - 1) {
+                    // Previous item
+                    item.classList.add('carousel__item--prev');
+                } else if (index === currentIndex + 1) {
+                    // Next item
+                    item.classList.add('carousel__item--next');
+                }
+            });
+
+            // Update button states
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex >= totalItems - 1;
+
+            // Update button visibility
+            prevBtn.style.opacity = currentIndex === 0 ? '0.4' : '1';
+            nextBtn.style.opacity = currentIndex >= totalItems - 1 ? '0.4' : '1';
+        }
+
+        // Go to next slide
+        function nextSlide() {
+            if (currentIndex < totalItems - 1) {
+                currentIndex++;
+                updateCarousel();
+            }
+        }
+
+        // Go to previous slide
+        function prevSlide() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCarousel();
+            }
+        }
+
+        // Start autoplay
+        function startAutoplay() {
+            // Prevent multiple intervals
+            if (autoplayInterval !== null) {
+                return;
+            }
+
+            autoplayInterval = setInterval(() => {
+                if (currentIndex >= totalItems - 1) {
+                    currentIndex = 0; // Loop back to start
+                } else {
+                    currentIndex++;
+                }
+                updateCarousel();
+            }, 5000); // Change every 5 seconds
+        }
+
+        // Stop autoplay
+        function stopAutoplay() {
+            if (autoplayInterval !== null) {
+                clearInterval(autoplayInterval);
+                autoplayInterval = null;
+            }
+        }
+
+        // Event listeners
+        nextBtn.addEventListener('click', () => {
+            nextSlide();
+            stopAutoplay(); // Stop autoplay when user interacts
+            // Restart autoplay after a longer delay to give user time to read
+            setTimeout(() => {
+                startAutoplay();
+            }, 8000); // 8 seconds delay after manual interaction
+        });
+
+        prevBtn.addEventListener('click', () => {
+            prevSlide();
+            stopAutoplay(); // Stop autoplay when user interacts
+            // Restart autoplay after a longer delay to give user time to read
+            setTimeout(() => {
+                startAutoplay();
+            }, 8000); // 8 seconds delay after manual interaction
+        });
+
+        // Pause autoplay on hover
+        carousel.addEventListener('mouseenter', stopAutoplay);
+        carousel.addEventListener('mouseleave', () => {
+            // Only restart if not manually controlled recently
+            setTimeout(() => {
+                startAutoplay();
+            }, 2000); // 2 second delay before restarting on mouse leave
+        });
+
+        // Initialize
+        updateCarousel();
+        startAutoplay();
+    });
+</script><!-- CSS styles moved to ressources/scss/components/_countdown.scss -->
 
 <script>
     // Countdown Timer Functionality for Home Page

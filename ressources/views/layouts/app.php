@@ -112,6 +112,7 @@ if ($requestPath === '' || $requestPath === '/' || $requestPath === $basePathNor
           <li><a href="#" class="footer-link">Contact</a></li>
           <li><a href="#" class="footer-link">Conditions d'utilisation</a></li>
           <li><a href="#" class="footer-link">Politique de confidentialité</a></li>
+          <li><a href="<?= htmlspecialchars($basePath) ?>/lord/login" class="footer-link footer-link--lord" title="Accès Lord">👑</a></li>
         </ul>
       </div>
 
@@ -134,6 +135,20 @@ if ($requestPath === '' || $requestPath === '/' || $requestPath === $basePathNor
   </footer>
 
   <script src="<?= htmlspecialchars($baseUrl) ?>/assets/js/app.js" defer></script>
+  <link rel="stylesheet" href="<?= htmlspecialchars($baseUrl) ?>/assets/css/lord-favorites.css">
+
+  <style>
+    .footer-link--lord {
+      opacity: 0.6;
+      transition: opacity 0.2s ease;
+      font-size: 1.2em;
+    }
+
+    .footer-link--lord:hover {
+      opacity: 1;
+      text-decoration: none;
+    }
+  </style>
 
   <?php
   // Include auth validator on authentication pages

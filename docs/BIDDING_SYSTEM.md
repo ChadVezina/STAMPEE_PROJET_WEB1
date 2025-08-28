@@ -183,7 +183,7 @@ Valide un montant d'offre
 ```json
 {
     "valid": false,
-    "errors": ["Votre offre doit être supérieure à 45.01 €"],
+    "errors": ["Votre offre doit être supérieure à 45.01 $ CAD"],
     "minimum_bid": 45.01
 }
 ```

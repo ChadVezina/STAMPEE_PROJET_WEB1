@@ -102,7 +102,7 @@
         &__header {
             padding: 2rem 2.5rem 1rem;
             border-bottom: 1px solid #f3f4f6;
-            background: linear-gradient(135deg, #fafbfc 0%, #f8fafc 100%);
+            background: #fafbfc;
         }
 
         &__title {
@@ -134,7 +134,7 @@
             border-color: #dc3545;
 
             .card__header {
-                background: linear-gradient(135deg, #fef2f2 0%, #fef7f7 100%);
+                background: #fef2f2;
                 border-bottom-color: #fecaca;
             }
 
